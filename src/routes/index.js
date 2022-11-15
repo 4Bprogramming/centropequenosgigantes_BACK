@@ -22,8 +22,8 @@ const {
   getGraficProffesionalById,
 } = require("../Controllers/graficProffesional");
 const { routefilter } = require("../Controllers/controllerFilters");
-const { countries, states, cities } = require("../Controllers/countries");
-const { PaymentRoute } = require("../Controllers/controllerStripePay");
+
+
 const {
   getAllUsers,
   getPro,
