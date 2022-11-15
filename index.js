@@ -7,7 +7,7 @@ conn.sync({ force: false}).then(() => {
 
   server.listen(3001, () => {
 
-    console.log(`Listening at Port `); // eslint-disable-line no-console
+    console.log(`escuchando de dieeeegooo papaaaa`); // eslint-disable-line no-console
 
 
   });

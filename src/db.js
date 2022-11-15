@@ -14,8 +14,8 @@ const sequelize = new Sequelize(DB_NAME, DB_USER,
         dialect: DB_DIALECT,
         operationsAliases: false,
         pool: {
-        max: +MAX,
-        min: +MIN,
+        max: 5,
+        min: 1,
         acquire: ACQUIRE,
         idle: IDLE
         }
