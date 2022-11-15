@@ -84,11 +84,11 @@ router.get("/filter", routefilter);
 
 router.get("/ads", getName);
 
-//get countries
+// //get countries
 
-router.get("/countries", countries);
-router.get("/states/:countryId", states);
-router.get("/cities/:countryId/:stateId", cities);
+// router.get("/countries", countries);
+// router.get("/states/:countryId", states);
+// router.get("/cities/:countryId/:stateId", cities);
 
 //get Appointments
 router.get("/appointments", getAppointments);
@@ -131,7 +131,7 @@ router.post("/professionals", createProfessional);
 
 //Payment
 
-router.post("/payment", PaymentRoute);
+// router.post("/payment", PaymentRoute);
 
 //create Ads
 router.post("/ad", createAds);
