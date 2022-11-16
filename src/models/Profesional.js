@@ -22,6 +22,10 @@ module.exports = (sequelize) => {
       type:DataTypes.STRING,
       allowNull: false,
     },
+    password:{
+      type:DataTypes.STRING,
+      allowNull:false
+    },
     matricula:{
       type:DataTypes.STRING,
       allowNull: false,
@@ -35,6 +39,10 @@ module.exports = (sequelize) => {
     get() {
       return `${this.nombre} ${this.apellido}`;
     }
+  },
+  active: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
   }
 
   },{
