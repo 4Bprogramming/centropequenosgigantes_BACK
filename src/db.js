@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const Medical_Record = require('./models/Medical_Record');
 const {
-  DB_USER, DB_PASSWORD, DB_HOST, DB_DIALECT,MAX,MIN,ACQUIRE,IDLE,DB_NAME
+  DB_USER, DB_PASSWORD, DB_HOST, DB_DIALECT,ACQUIRE,IDLE,DB_NAME
 } = process.env;
 
 
