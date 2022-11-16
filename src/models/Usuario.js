@@ -3,7 +3,7 @@ const { DataTypes } = require('sequelize');
 // Luego le injectamos la conexion a sequelize.
 module.exports = (sequelize) => {
   // defino el modelo
-  sequelize.define('profesional', {
+  sequelize.define('usuario', {
     id: {
       primaryKey: true,
       type: DataTypes.STRING,
@@ -22,21 +22,12 @@ module.exports = (sequelize) => {
       type:DataTypes.STRING,
       allowNull: false,
     },
-    matricula:{
-      type:DataTypes.STRING,
-      allowNull: false,
-    },
-    imagenProfesional: {
-      type: DataTypes.STRING,
-      allowNull: true,
-
-  },
+   
   fullName: {
     type: DataTypes.VIRTUAL,
     get() {
       return `${this.nombre} ${this.apellido}`;
     }
-
   }
 
   },{
