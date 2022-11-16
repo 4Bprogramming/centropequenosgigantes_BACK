@@ -7,10 +7,10 @@ const {Profesional} = require('../db')
 //traer todos los profesionales
 const profesionales = async (req, res, next) => {
     try {
-      const profesional = await Profesional.findAll();
-      if (profesional.length === 0)
+      const profesionales = await Profesional.findAll();
+      if (profesionales.length === 0)
         return res.status(404).send({ message: "No se encontró nigún profesional" });
-      res.status(200).send(profesional);
+      res.status(200).send(profesionales);
     } catch (e) {
       next(e);
     }
@@ -20,7 +20,24 @@ const profesionales = async (req, res, next) => {
 
 
 
+  // Traer profesional por ID
+const profesionalPorId = async(req,res,next)=>{
+    const {id} = req.params;
+    try {
+        const profesionalXiD = await Profesional.findByPk(id);
+        if(profesionalXiD){
+            res.status(200).send(profesionalXiD);
+        }else{
+            return res.status(404).send({message: 'El profesional por Id no se encontró'})
+        }
+    } catch (e) {
+        next(e);
+    }
+}
+
+
 
 module.exports = {
-    profesionales
+    profesionales,
+    profesionalPorId
 }
