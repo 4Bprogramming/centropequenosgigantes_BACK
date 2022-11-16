@@ -22,23 +22,42 @@ const getAllUsers = async (req, res, next) => {
 };
 
 // get user by id
+// const userId = async (req, res, next) => {
+//   try {
+//     const { id } = req.params;
+//     console.log('soy req.params',req.params)
+    
+
+//     const userById = await User.findByPk(id, {
+//       include: [{ model: Professional, include: [Ad] }],
+//     });
+//     console.log('soy userById',userById)
+//     !userById
+//       ? res.status(404).send({ message: "User by id not found" })
+//       : res.status(200).send(userById);
+//   } catch (e) {
+//     next(e);
+//   }
+// };
+
 const userId = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log('soy req.params',req.params)
-    
-
-    const userById = await User.findByPk(id, {
-      include: [{ model: Professional, include: [Ad] }],
-    });
-    console.log('soy userById',userById)
+    const userById = await Professional.findByPk(id);
     !userById
-      ? res.status(404).send({ message: "User not found" })
+      ? res.status(404).send({ message: "User by id not found" })
       : res.status(200).send(userById);
   } catch (e) {
     next(e);
   }
 };
+
+
+
+
+
+
+
 
 //get Professionals
 const getPro = async (req, res, next) => {

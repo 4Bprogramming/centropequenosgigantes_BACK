@@ -2,7 +2,6 @@ require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
-const Medical_Record = require('./models/Medical_Record');
 const {
   DB_USER, DB_PASSWORD, DB_HOST, DB_DIALECT,ACQUIRE,IDLE,DB_NAME
 } = process.env;
@@ -40,36 +39,36 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-const { User , Professional , Medicalrecord , Comments , Appointment , Ad , Specialty} = sequelize.models;
+const { Profesional} = sequelize.models;
 
 // Aca vendrian las relaciones
 // Product.hasMany(Reviews);
-Professional.hasMany(Ad)
-Ad.belongsTo(Professional)
+// Professional.hasMany(Ad)
+// Ad.belongsTo(Professional)
 
-User.hasOne(Professional)
-Professional.belongsTo(User)
+// User.hasOne(Professional)
+// Professional.belongsTo(User)
 
-Professional.hasMany(Appointment )
-Appointment.belongsTo(Professional)
+// Professional.hasMany(Appointment )
+// Appointment.belongsTo(Professional)
 
-User.hasMany(Appointment)
-Appointment.belongsTo(User)
+// User.hasMany(Appointment)
+// Appointment.belongsTo(User)
 
 //Un usuario puede tener muchos comentarios medicos pero todos esos comentarios pertencen a un solo usuario
-User.hasOne(Medicalrecord)
-Medicalrecord.belongsTo(User)
+// User.hasOne(Medicalrecord)
+// Medicalrecord.belongsTo(User)
 
 //Un profesional puede tener muchos comentarios pero todos esos comentarios pertencen a un solo profesional 
-User.hasOne(Comments)
-Comments.belongsTo(User)
+// User.hasOne(Comments)
+// Comments.belongsTo(User)
 
 //podemos hacer que copincidan los id en turno y medical record para hacer coindir el usuario :*
-Ad.hasMany(Appointment)
-Appointment.belongsTo(Ad)
+// Ad.hasMany(Appointment)
+// Appointment.belongsTo(Ad)
 
-User.belongsToMany(Professional , {through: 'favorites'  , timestamps: false})
-Professional.belongsToMany(User , {through: 'favorites' , timestamps: false})
+// User.belongsToMany(Professional , {through: 'favorites'  , timestamps: false})
+// Professional.belongsToMany(User , {through: 'favorites' , timestamps: false})
 
 
 

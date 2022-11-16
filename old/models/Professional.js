@@ -4,25 +4,27 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   // defino el modelo
   sequelize.define('professional', {
-    medicalLicense: {
+    id: {
       primaryKey: true,
       type: DataTypes.STRING,
       allowNull: false,
     },
-    licenceImage:{
-        type: DataTypes.STRING,
-        allowNull:false
-    } ,
-    ranking:{
-      type: DataTypes.STRING
-    },
-    aboutMe:{
-      type:DataTypes.TEXT,
-      allowNull: true,
-    },
-    college:{
+   
+    nombre:{
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false,
+    },
+    apellido:{
+      type:DataTypes.STRING,
+      allowNull: false,
+    },
+    email:{
+      type:DataTypes.STRING,
+      allowNull: false,
+    },
+    matricula:{
+      type:DataTypes.STRING,
+      allowNull: false,
     }
 
   },{
