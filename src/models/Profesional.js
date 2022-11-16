@@ -29,12 +29,14 @@ module.exports = (sequelize) => {
     imagenProfesional: {
       type: DataTypes.STRING,
       allowNull: true,
+
   },
   fullName: {
     type: DataTypes.VIRTUAL,
     get() {
       return `${this.nombre} ${this.apellido}`;
     }
+
   }
 
   },{
