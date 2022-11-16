@@ -25,7 +25,11 @@ module.exports = (sequelize) => {
     matricula:{
       type:DataTypes.STRING,
       allowNull: false,
-    }
+    },
+    imagenProfesional: {
+      type: DataTypes.STRING,
+      allowNull: true,
+  }
 
   },{
     freezeTableName: true,
