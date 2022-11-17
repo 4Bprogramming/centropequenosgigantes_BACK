@@ -5,6 +5,7 @@ const { Profesional, Usuario } = require("../db");
 
 
 
+
 //traer todos los profesionales
 const profesionales = async (req, res, next) => {
   try {
@@ -18,10 +19,6 @@ const profesionales = async (req, res, next) => {
     next(e);
   }
 };
-
-
-
-
 
 
 // Traer profesional por ID
@@ -42,9 +39,6 @@ const profesionalPorId = async (req, res, next) => {
 };
 
 
-
-
-
 // traer todos los usuarios
 const usuarios = async (req, res, next) => {
   try {
@@ -56,10 +50,6 @@ const usuarios = async (req, res, next) => {
     next(e);
   }
 };
-
-
-
-
 
 
 //traer usuario por ID
@@ -82,9 +72,8 @@ const usuarioPorId = async (req, res, next) => {
 
 
 
-
-
 // **************** POSTS ************************//
+
 
 
 //crear usuario
@@ -146,4 +135,5 @@ module.exports = {
   usuarioPorId,
   crearUsuario,
   crearProfesional
+
 };

@@ -18,9 +18,11 @@ router.get ('/usuarios',usuarios)
 // buscar usuario por ID
 router.get ('/usuarios/:id',usuarioPorId);
 
+
 //***POSTS*****/
 router.post('/usuarios',validadorDeDatos,crearUsuario);
 router.post('/profesionales',validadorDeDatos,crearProfesional);
+
 
 
 module.exports = router;
