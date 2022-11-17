@@ -1,7 +1,7 @@
 // aqui van a ir todos los cotroladores Profesionales, Usuario, etc. y distintos verbos GET POST PUT DELETE
 
 //importamos lo modelos de la DB
-const { Profesional, Usuario } = require("../db");
+const { Profesional, Usuario,Turno } = require("../db");
 
 
 
@@ -9,7 +9,7 @@ const { Profesional, Usuario } = require("../db");
 //traer todos los profesionales
 const profesionales = async (req, res, next) => {
   try {
-    const profesionales = await Profesional.findAll();
+    const profesionales = await Profesional.findAll({ include: Turno });  
     if (profesionales.length === 0)
       return res
         .status(404)
@@ -42,7 +42,7 @@ const profesionalPorId = async (req, res, next) => {
 // traer todos los usuarios
 const usuarios = async (req, res, next) => {
   try {
-    const usuarios = await Usuario.findAll();
+    const usuarios = await Usuario.findAll({ include: Turno });
     if (usuarios.length === 0)
       return res.status(404).send({ message: "No se encontraron usuarios" });
     res.status(200).send(usuarios);
@@ -126,6 +126,35 @@ const crearProfesional = async(req,res,next)=>{
   }
 }
 
+//Crear turno
+const crearTurno = async(req,res,next)=>{
+  try {
+    const {startTime,endTime,date,estado} = req.body;
+    const turnoCreado = await Turno.create(
+      {
+        startTime,
+        endTime,
+        date,
+        estado
+      }
+    )
+    if(!turnoCreado)
+      return res.status(418).send({message:'El turno no pudo ser creado'})
+    res.status(201).send({message:'Turno creado con exito!'});
+
+
+  } catch (e) {
+    next(e)
+  }
+
+
+
+
+}
+
+
+
+
 
 module.exports = {
   profesionales,
@@ -133,6 +162,7 @@ module.exports = {
   usuarios,
   usuarioPorId,
   crearUsuario,
-  crearProfesional
+  crearProfesional,
+  crearTurno
 
 };

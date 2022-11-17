@@ -10,18 +10,18 @@ module.exports = (sequelize) => {
         defaultValue: DataTypes.UUIDV1,
         allowNull: false,
     },
-    // startTime:{
-    //     type: DataTypes.ARRAY(DataTypes.STRING),
-    //     allowNull:false
-    // },
-    // endTime:{
-    //     type: DataTypes.ARRAY(DataTypes.STRING),
-    //     allowNull:false
-    // },
-    // date:{
-    //     type: DataTypes.ARRAY(DataTypes.STRING),
-    //     allowNull:false
-    // },
+    startTime:{
+        type: DataTypes.STRING,
+        allowNull:false
+    },
+    endTime:{
+        type: DataTypes.STRING,
+        allowNull:false
+    },
+    date:{
+        type: DataTypes.STRING,
+        allowNull:false
+    },
     
     estado:{
         type: DataTypes.ENUM('pendiente' , 'finalizado', 'cancelado'),
