@@ -6,8 +6,6 @@ const { Profesional, Usuario } = require("../db");
 
 
 
-
-
 //traer todos los profesionales
 const profesionales = async (req, res, next) => {
   try {
@@ -15,16 +13,12 @@ const profesionales = async (req, res, next) => {
     if (profesionales.length === 0)
       return res
         .status(404)
-        .send({ message: "No se encontró nigún profesional" });
+        .send({ message: "No se encontraron profesionales" });
     res.status(200).send(profesionales);
   } catch (e) {
     next(e);
   }
 };
-
-
-
-
 
 
 // Traer profesional por ID
@@ -45,9 +39,6 @@ const profesionalPorId = async (req, res, next) => {
 };
 
 
-
-
-
 // traer todos los usuarios
 const usuarios = async (req, res, next) => {
   try {
@@ -59,10 +50,6 @@ const usuarios = async (req, res, next) => {
     next(e);
   }
 };
-
-
-
-
 
 
 //traer usuario por ID
@@ -85,7 +72,60 @@ const usuarioPorId = async (req, res, next) => {
 
 
 
+// **************** POSTS ************************//
 
+
+
+//crear usuario
+const crearUsuario = async (req,res,next)=>{
+  try {
+    const { id, nombre, apellido, email,password,active} =req.body;
+    const usuarioCreado = await Usuario.create(
+      {
+        id,
+        nombre,
+        apellido,
+        email,
+        password,
+        active
+        
+      }
+    ); //fin cuerpo de creación.
+
+    if(!usuarioCreado)
+      return res.status(418).send({message:'El usuario no se pudo crear'})
+    res.status(201).send({message:'Usuario creado con exito!'});
+
+  } catch (e) {
+    next(e);
+  }
+};
+
+
+//crear profesional
+const crearProfesional = async(req,res,next)=>{
+  try {
+    const { id, nombre, apellido, email,password,active,matricula,imagenProfesional} =req.body;
+    const profesionalCreado = await Profesional.create(
+      {
+        id,
+        nombre,
+        apellido,
+        email,
+        password,
+        matricula,
+        active,
+        imagenProfesional
+      }
+    );//fin cuerpo profesional creado
+
+    if(!profesionalCreado)
+      return res.status(418).send({message:'El profesional no se pudo crear'})
+    res.status(201).send({message:'Profesional creado con exito!'});
+  } catch (e) {
+    next(e)
+  }
+}
 
 
 module.exports = {
@@ -93,4 +133,7 @@ module.exports = {
   profesionalPorId,
   usuarios,
   usuarioPorId,
+  crearUsuario,
+  crearProfesional
+
 };
