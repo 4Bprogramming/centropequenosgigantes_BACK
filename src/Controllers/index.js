@@ -129,13 +129,14 @@ const crearProfesional = async(req,res,next)=>{
 //Crear turno
 const crearTurno = async(req,res,next)=>{
   try {
-    const {startTime,endTime,date,estado} = req.body;
+    const {startTime,endTime,date,estado,profesionalId} = req.body;
     const turnoCreado = await Turno.create(
       {
         startTime,
         endTime,
         date,
-        estado
+        estado,
+        profesionalId  
       }
     )
     if(!turnoCreado)

@@ -24,7 +24,7 @@ module.exports = (sequelize) => {
     },
     
     estado:{
-        type: DataTypes.ENUM('pendiente' , 'finalizado', 'cancelado'),
+        type: DataTypes.ENUM('pendiente' , 'finalizado', 'cancelado','diposnible'),
         allowNull:false
     }
   },{
