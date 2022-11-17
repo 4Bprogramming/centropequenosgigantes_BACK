@@ -22,6 +22,10 @@ module.exports = (sequelize) => {
       type:DataTypes.STRING,
       allowNull: false,
     },
+    password:{
+      type:DataTypes.STRING,
+      allowNull:false
+    },
     matricula:{
       type:DataTypes.STRING,
       allowNull: false,
@@ -29,17 +33,18 @@ module.exports = (sequelize) => {
     imagenProfesional: {
       type: DataTypes.STRING,
       allowNull: true,
-
   },
   fullName: {
     type: DataTypes.VIRTUAL,
     get() {
       return `${this.nombre} ${this.apellido}`;
     }
-
-  }
-
-  },{
+  },
+  active: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+  }},
+  {
     freezeTableName: true,
     timestamps: false
 });
