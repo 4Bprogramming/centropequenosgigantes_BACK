@@ -48,7 +48,6 @@ const profesionalPorId = async (req, res, next) => {
 
 
 
-
 // traer todos los usuarios
 const usuarios = async (req, res, next) => {
   try {
@@ -83,6 +82,11 @@ const usuarioPorId = async (req, res, next) => {
     next(e);
   }
 };
+
+
+
+
+
 
 module.exports = {
   profesionales,
