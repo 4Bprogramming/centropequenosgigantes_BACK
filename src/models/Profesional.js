@@ -33,11 +33,6 @@ module.exports = (sequelize) => {
     imagenProfesional: {
       type: DataTypes.STRING,
       allowNull: true,
-<<<<<<< HEAD
-  }
-
-  },{
-=======
   },
   fullName: {
     type: DataTypes.VIRTUAL,
@@ -50,7 +45,6 @@ module.exports = (sequelize) => {
     defaultValue: true,
   }},
   {
->>>>>>> f1c4b7e79d09492061b17d56e3ae54330ec8325c
     freezeTableName: true,
     timestamps: false
 });
