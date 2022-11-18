@@ -6,8 +6,7 @@ module.exports = (sequelize) => {
   sequelize.define(
     "usuario",
     {
-      id: {
-        primaryKey: true,
+      idUsuario: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -20,7 +19,8 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      email: {
+      emailUsuario: {
+        primaryKey: true,
         type: DataTypes.STRING,
         allowNull: false,
       },

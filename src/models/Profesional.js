@@ -4,7 +4,7 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   // defino el modelo
   sequelize.define('profesional', {
-    id: {
+    idProfesional: {
       primaryKey: true,
       type: DataTypes.STRING,
       allowNull: false,
@@ -18,7 +18,7 @@ module.exports = (sequelize) => {
       type:DataTypes.STRING,
       allowNull: false,
     },
-    email:{
+    emailProfesional:{
       type:DataTypes.STRING,
       allowNull: false,
     },

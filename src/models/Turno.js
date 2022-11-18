@@ -24,8 +24,9 @@ module.exports = (sequelize) => {
     },
     
     estado:{
-        type: DataTypes.ENUM('pendiente' , 'finalizado', 'cancelado','diposnible'),
-        allowNull:false
+        type: DataTypes.ENUM('pendiente' , 'finalizado', 'cancelado','disponible','reservado'),
+        allowNull:false,
+        defaultValue: "disponible"
     }
   },{
     freezeTableName: true,
