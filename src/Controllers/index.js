@@ -23,9 +23,9 @@ const profesionales = async (req, res, next) => {
 
 // Traer profesional por ID
 const profesionalPorId = async (req, res, next) => {
-  const { id } = req.params;
+  const { idProfesional } = req.params;
   try {
-    const profesionalXiD = await Profesional.findByPk(id);
+    const profesionalXiD = await Profesional.findByPk(idProfesional,{ include: Turno });
     if (profesionalXiD) {
       res.status(200).send(profesionalXiD);
     } else {
@@ -54,10 +54,12 @@ const usuarios = async (req, res, next) => {
 
 //traer usuario por ID
 const usuarioPorId = async (req, res, next) => {
-  const { id } = req.params;
+  const { idUsuario } = req.params;
+  console.log('id del usuario--->',idUsuario)
+ 
 
   try {
-    const usuarioPorId = await Usuario.findByPk(id);
+    const usuarioPorId = await Usuario.findOne({where:{idUsuario:idUsuario,},include:{model:Turno}});
     if (usuarioPorId) {
       res.status(200).send(usuarioPorId);
     } else {
@@ -78,13 +80,13 @@ const usuarioPorId = async (req, res, next) => {
 //crear usuario
 const crearUsuario = async (req,res,next)=>{
   try {
-    const { id, nombre, apellido, email,password,active} =req.body;
+    const { idUsuario, nombre, apellido, emailUsuario,password,active} =req.body;
     const usuarioCreado = await Usuario.create(
       {
-        id,
+        idUsuario,
         nombre,
         apellido,
-        email,
+        emailUsuario,
         password,
         active
         
@@ -104,13 +106,13 @@ const crearUsuario = async (req,res,next)=>{
 //crear profesional
 const crearProfesional = async(req,res,next)=>{
   try {
-    const { id, nombre, apellido, email,password,active,matricula,imagenProfesional} =req.body;
+    const { idProfesional, nombre, apellido, emailProfesional,password,active,matricula,imagenProfesional} =req.body;
     const profesionalCreado = await Profesional.create(
       {
-        id,
+        idProfesional,
         nombre,
         apellido,
-        email,
+        emailProfesional,
         password,
         matricula,
         active,
@@ -129,14 +131,18 @@ const crearProfesional = async(req,res,next)=>{
 //Crear turno
 const crearTurno = async(req,res,next)=>{
   try {
-    const {startTime,endTime,date,estado,profesionalId} = req.body;
+
+    const {startTime,endTime,date,estado,profesionalIdProfesional} = req.body;
+
     const turnoCreado = await Turno.create(
       {
         startTime,
         endTime,
         date,
         estado,
-        profesionalId  
+
+        profesionalIdProfesional  
+
       }
     )
     if(!turnoCreado)
@@ -148,12 +154,64 @@ const crearTurno = async(req,res,next)=>{
     next(e)
   }
 
-
-
-
 }
 
+//***********PUT**********/
+// Reservar el turno por el usuario.
 
+const modificarTurno = async(req,res,next)=>{
+  try {
+    const {id,estado,emailUsuario} = req.body;
+    const turno = await Turno.findByPk(id);
+
+    //reservar (booked)
+    if(estado === 'reservado' && emailUsuario){
+      await turno?.update({
+        estado:estado,
+      });
+      res.status(200).send({message:'El turno fue reservado pero falta el pago'});
+    }
+    //turno ya pago pasa a "pendiente" hasta ser atendido.   
+    else if(estado === 'pendiente' && emailUsuario){
+      await turno?.update({
+        estado:estado,
+        usuarioEmailUsuario:emailUsuario
+      });
+      res.status(200).send({message:'¡Turno reservado el pago fue exitoso!'});
+    } 
+    //turno cancelado por pago no completo
+    else if(estado === 'disponible' && emailUsuario){
+      await turno?.update({
+        estado:estado,
+        usuarioEmailUsuario:null
+      });
+      res.status(200).send({message:'¡No se procesó el pago!'});
+    }
+    //turno completado con historica clinica
+    else if(estado === 'finalizado' && emailUsuario){
+      await turno?.update({
+        estado:estado,
+        usuarioEmailUsuario:emailUsuario
+      });
+      res.status(200).send({message:'¡Turno finalizado!'});
+    }
+    //usuario canceló el turno
+    else if(estado === 'cancelado' && emailUsuario){
+      await turno?.update({
+        estado:estado,
+        usuarioEmailUsuario:emailUsuario
+      });
+      res.status(200).send({message:'¡Turno cancelado por el usuario!'});
+    }
+    else{
+       res.status(404).send("Hubo un problema con la modificación del turno");
+    }
+    
+  
+  } catch (e) {
+    next(e)
+  }
+}
 
 
 
@@ -164,6 +222,6 @@ module.exports = {
   usuarioPorId,
   crearUsuario,
   crearProfesional,
-  crearTurno
-
+  crearTurno,
+  modificarTurno
 };
