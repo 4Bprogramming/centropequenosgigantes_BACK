@@ -131,14 +131,18 @@ const crearProfesional = async(req,res,next)=>{
 //Crear turno
 const crearTurno = async(req,res,next)=>{
   try {
+
     const {startTime,endTime,date,estado,profesionalIdProfesional} = req.body;
+
     const turnoCreado = await Turno.create(
       {
         startTime,
         endTime,
         date,
         estado,
+
         profesionalIdProfesional  
+
       }
     )
     if(!turnoCreado)
@@ -149,6 +153,7 @@ const crearTurno = async(req,res,next)=>{
   } catch (e) {
     next(e)
   }
+
 }
 
 //***********PUT**********/
@@ -209,6 +214,7 @@ const modificarTurno = async(req,res,next)=>{
 }
 
 
+
 module.exports = {
   profesionales,
   profesionalPorId,
@@ -218,5 +224,4 @@ module.exports = {
   crearProfesional,
   crearTurno,
   modificarTurno
-
 };
