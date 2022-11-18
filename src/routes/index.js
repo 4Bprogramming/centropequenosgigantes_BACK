@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const {profesionales,profesionalPorId,usuarios,usuarioPorId,crearUsuario,crearProfesional} = require('../Controllers')
+const {profesionales,profesionalPorId,usuarios,usuarioPorId,crearUsuario,crearProfesional,crearTurno} = require('../Controllers')
 const router = Router();
 //importamos helper para validar el body
 const {validadorDeDatos} = require('../helpers/validations');
@@ -22,6 +22,7 @@ router.get ('/usuarios/:id',usuarioPorId);
 //***POSTS*****/
 router.post('/usuarios',validadorDeDatos,crearUsuario);
 router.post('/profesionales',validadorDeDatos,crearProfesional);
+router.post('/turnos',crearTurno);
 
 
 
