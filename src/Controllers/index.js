@@ -80,13 +80,13 @@ const usuarioPorId = async (req, res, next) => {
 //crear usuario
 const crearUsuario = async (req,res,next)=>{
   try {
-    const { idUsuario, nombre, apellido, emailUsuario,password,active} =req.body;
+    const { idUsuario, nombre, apellido, email,password,active} =req.body;
     const usuarioCreado = await Usuario.create(
       {
         idUsuario,
         nombre,
         apellido,
-        emailUsuario,
+        email,
         password,
         active
         
@@ -106,13 +106,13 @@ const crearUsuario = async (req,res,next)=>{
 //crear profesional
 const crearProfesional = async(req,res,next)=>{
   try {
-    const { idProfesional, nombre, apellido, emailProfesional,password,active,matricula,imagenProfesional} =req.body;
+    const { idProfesional, nombre, apellido, email,password,active,matricula,imagenProfesional} =req.body;
     const profesionalCreado = await Profesional.create(
       {
         idProfesional,
         nombre,
         apellido,
-        emailProfesional,
+        email,
         password,
         matricula,
         active,
@@ -131,18 +131,14 @@ const crearProfesional = async(req,res,next)=>{
 //Crear turno
 const crearTurno = async(req,res,next)=>{
   try {
-
     const {startTime,endTime,date,estado,profesionalIdProfesional} = req.body;
-
     const turnoCreado = await Turno.create(
       {
         startTime,
         endTime,
         date,
         estado,
-
         profesionalIdProfesional  
-
       }
     )
     if(!turnoCreado)
@@ -153,7 +149,6 @@ const crearTurno = async(req,res,next)=>{
   } catch (e) {
     next(e)
   }
-
 }
 
 //***********PUT**********/
@@ -161,45 +156,45 @@ const crearTurno = async(req,res,next)=>{
 
 const modificarTurno = async(req,res,next)=>{
   try {
-    const {id,estado,emailUsuario} = req.body;
+    const {id,estado,email} = req.body;
     const turno = await Turno.findByPk(id);
 
     //reservar (booked)
-    if(estado === 'reservado' && emailUsuario){
+    if(estado === 'reservado' && email){
       await turno?.update({
         estado:estado,
       });
-      res.status(200).send({message:'El turno fue reservado pero falta el pago'});
+      res.status(200).send({message:'El turno fue reservado pero falta realizar el pago'});
     }
     //turno ya pago pasa a "pendiente" hasta ser atendido.   
-    else if(estado === 'pendiente' && emailUsuario){
+    else if(estado === 'pendiente' && email){
       await turno?.update({
         estado:estado,
-        usuarioEmailUsuario:emailUsuario
+        usuarioEmail:email
       });
       res.status(200).send({message:'¡Turno reservado el pago fue exitoso!'});
     } 
     //turno cancelado por pago no completo
-    else if(estado === 'disponible' && emailUsuario){
+    else if(estado === 'disponible' && email){
       await turno?.update({
         estado:estado,
-        usuarioEmailUsuario:null
+        usuarioEmail:null
       });
       res.status(200).send({message:'¡No se procesó el pago!'});
     }
     //turno completado con historica clinica
-    else if(estado === 'finalizado' && emailUsuario){
+    else if(estado === 'finalizado' && email){
       await turno?.update({
         estado:estado,
-        usuarioEmailUsuario:emailUsuario
+        usuarioEmail:email
       });
       res.status(200).send({message:'¡Turno finalizado!'});
     }
     //usuario canceló el turno
-    else if(estado === 'cancelado' && emailUsuario){
+    else if(estado === 'cancelado' && email){
       await turno?.update({
         estado:estado,
-        usuarioEmailUsuario:emailUsuario
+        usuarioEmail:email
       });
       res.status(200).send({message:'¡Turno cancelado por el usuario!'});
     }
@@ -212,7 +207,6 @@ const modificarTurno = async(req,res,next)=>{
     next(e)
   }
 }
-
 
 
 module.exports = {

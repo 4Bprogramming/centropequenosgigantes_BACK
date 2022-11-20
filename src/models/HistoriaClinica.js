@@ -4,9 +4,7 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   // defino el modelo
   sequelize.define('historiaclinica', {
-
     id_hclinica: {
-
       primaryKey: true,
       type: DataTypes.STRING,
       allowNull: false,
