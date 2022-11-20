@@ -2,7 +2,9 @@
 
 //importamos lo modelos de la DB
 const { Profesional, Usuario,Turno } = require("../db");
-
+//importamos funcion para hashear
+const {hashPassword,checkPassword} = require('../helpers/handlePassword.js');
+const { tokenSign } = require("../helpers/jwt");
 
 
 
@@ -55,7 +57,7 @@ const usuarios = async (req, res, next) => {
 //traer usuario por ID
 const usuarioPorId = async (req, res, next) => {
   const { idUsuario } = req.params;
-  console.log('id del usuario--->',idUsuario)
+  // console.log('id del usuario--->',idUsuario)
  
 
   try {
@@ -80,18 +82,9 @@ const usuarioPorId = async (req, res, next) => {
 //crear usuario
 const crearUsuario = async (req,res,next)=>{
   try {
-    const { idUsuario, nombre, apellido, email,password,active} =req.body;
-    const usuarioCreado = await Usuario.create(
-      {
-        idUsuario,
-        nombre,
-        apellido,
-        email,
-        password,
-        active
-        
-      }
-    ); //fin cuerpo de creación.
+   
+    const hashedPassword = await hashPassword(req.body.password);
+    const usuarioCreado = await Usuario.create({...req.body,password:hashedPassword}); 
 
     if(!usuarioCreado)
       return res.status(418).send({message:'El usuario no se pudo crear'})
@@ -106,20 +99,8 @@ const crearUsuario = async (req,res,next)=>{
 //crear profesional
 const crearProfesional = async(req,res,next)=>{
   try {
-    const { idProfesional, nombre, apellido, email,password,active,matricula,imagenProfesional} =req.body;
-    const profesionalCreado = await Profesional.create(
-      {
-        idProfesional,
-        nombre,
-        apellido,
-        email,
-        password,
-        matricula,
-        active,
-        imagenProfesional
-      }
-    );//fin cuerpo profesional creado
-
+    const hashedPassword = await hashPassword(req.body.password);
+    const profesionalCreado = await Profesional.create({...req.body,password:hashedPassword});
     if(!profesionalCreado)
       return res.status(418).send({message:'El profesional no se pudo crear'})
     res.status(201).send({message:'Profesional creado con exito!'});
@@ -131,25 +112,49 @@ const crearProfesional = async(req,res,next)=>{
 //Crear turno
 const crearTurno = async(req,res,next)=>{
   try {
-    const {startTime,endTime,date,estado,profesionalIdProfesional} = req.body;
-    const turnoCreado = await Turno.create(
-      {
-        startTime,
-        endTime,
-        date,
-        estado,
-        profesionalIdProfesional  
-      }
-    )
+    const turnoCreado = await Turno.create({...req.body})
     if(!turnoCreado)
       return res.status(418).send({message:'El turno no pudo ser creado'})
     res.status(201).send({message:'Turno creado con exito!'});
-
-
   } catch (e) {
     next(e)
   }
 }
+
+// Login
+const login = async(req,res,next)=>{
+  try {
+    const {email,password,select} = req.body;
+    
+    //chequeamos el SELECT
+    if(select === 'usuario'){
+      var respuestaDB = await Usuario.findByPk(email,{include:{model:Turno}});
+    }else if(select === 'profesional'){
+      var respuestaDB = await Profesional.findOne({where:{email:email,},include:{model:Turno}});
+    }else{
+      return res.status(404).send({message:`el select debe ser 'usuario' o 'profesional' el valor fue ${select}` })
+    }
+    
+    //si no existe respuesta.
+    if(!respuestaDB) return res.status(401).send({message: 'El usuario no se encontró con ese email.'});
+    const passwordCorrecto = await checkPassword(password,respuestaDB.password);
+    
+    //si el password es correcto manda usuario y token
+    if(passwordCorrecto){
+      const tokenDeAcceso = await tokenSign(respuestaDB.dataValues,"2h")
+      res.status(200).send({usuario:respuestaDB,token:tokenDeAcceso})
+
+    }else {
+      //password incorrecto
+      res.status(401).send({message: `El usuario ${email} no está autorizado a ingresar passord erróneo.`});
+    }
+
+  } catch (e) {
+    next(e);
+  }
+}
+
+
 
 //***********PUT**********/
 // Reservar el turno por el usuario.
@@ -217,5 +222,7 @@ module.exports = {
   crearUsuario,
   crearProfesional,
   crearTurno,
-  modificarTurno
+  modificarTurno,
+  login
+  
 };
