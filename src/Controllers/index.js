@@ -218,5 +218,4 @@ module.exports = {
   crearProfesional,
   crearTurno,
   modificarTurno
-
 };
