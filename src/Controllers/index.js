@@ -128,11 +128,11 @@ const login = async(req,res,next)=>{
     
     //chequeamos el SELECT
     if(select === 'usuario'){
-      var respuestaDB = await Usuario.findByPk(email);
+      var respuestaDB = await Usuario.findByPk(email,{include:{model:Turno}});
     }else if(select === 'profesional'){
       var respuestaDB = await Profesional.findOne({where:{email:email,},include:{model:Turno}});
     }else{
-      return res.status(404).send({message:'No se mandó el select de manera correcta'})
+      return res.status(404).send({message:`el select debe ser 'usuario' o 'profesional' el valor fue ${select}` })
     }
     
     //si no existe respuesta.
