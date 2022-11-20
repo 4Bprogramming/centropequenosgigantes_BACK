@@ -2,7 +2,8 @@
 
 //importamos lo modelos de la DB
 const { Profesional, Usuario,Turno } = require("../db");
-
+//importamos funcion para hashear
+const {hashPassword} = require('../helpers/handlePassword.js')
 
 
 
@@ -80,18 +81,9 @@ const usuarioPorId = async (req, res, next) => {
 //crear usuario
 const crearUsuario = async (req,res,next)=>{
   try {
-    const { idUsuario, nombre, apellido, email,password,active} =req.body;
-    const usuarioCreado = await Usuario.create(
-      {
-        idUsuario,
-        nombre,
-        apellido,
-        email,
-        password,
-        active
-        
-      }
-    ); //fin cuerpo de creación.
+   
+    const hashedPassword = await hashPassword(req.body.password);
+    const usuarioCreado = await Usuario.create({...req.body,password:hashedPassword}); 
 
     if(!usuarioCreado)
       return res.status(418).send({message:'El usuario no se pudo crear'})
@@ -106,20 +98,8 @@ const crearUsuario = async (req,res,next)=>{
 //crear profesional
 const crearProfesional = async(req,res,next)=>{
   try {
-    const { idProfesional, nombre, apellido, email,password,active,matricula,imagenProfesional} =req.body;
-    const profesionalCreado = await Profesional.create(
-      {
-        idProfesional,
-        nombre,
-        apellido,
-        email,
-        password,
-        matricula,
-        active,
-        imagenProfesional
-      }
-    );//fin cuerpo profesional creado
-
+    const hashedPassword = await hashPassword(req.body.password);
+    const profesionalCreado = await Profesional.create({...req.body,password:hashedPassword});
     if(!profesionalCreado)
       return res.status(418).send({message:'El profesional no se pudo crear'})
     res.status(201).send({message:'Profesional creado con exito!'});
@@ -131,25 +111,18 @@ const crearProfesional = async(req,res,next)=>{
 //Crear turno
 const crearTurno = async(req,res,next)=>{
   try {
-    const {startTime,endTime,date,estado,profesionalIdProfesional} = req.body;
-    const turnoCreado = await Turno.create(
-      {
-        startTime,
-        endTime,
-        date,
-        estado,
-        profesionalIdProfesional  
-      }
-    )
+    const turnoCreado = await Turno.create({...req.body})
     if(!turnoCreado)
       return res.status(418).send({message:'El turno no pudo ser creado'})
     res.status(201).send({message:'Turno creado con exito!'});
-
-
   } catch (e) {
     next(e)
   }
 }
+
+
+
+
 
 //***********PUT**********/
 // Reservar el turno por el usuario.
@@ -217,5 +190,6 @@ module.exports = {
   crearUsuario,
   crearProfesional,
   crearTurno,
-  modificarTurno
+  modificarTurno,
+  
 };

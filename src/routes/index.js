@@ -24,8 +24,7 @@ router.post('/usuarios',validadorDeDatos,crearUsuario);
 router.post('/profesionales',validadorDeDatos,crearProfesional);
 router.post('/turnos',crearTurno);
 
-//Register
-// router.post("/register", registrarse);
+
 
 //***UPDATE***/
 router.put('/turnos',modificarTurno);
