@@ -3,7 +3,8 @@
 //importamos lo modelos de la DB
 const { Profesional, Usuario,Turno } = require("../db");
 //importamos funcion para hashear
-const {hashPassword} = require('../helpers/handlePassword.js')
+const {hashPassword,checkPassword} = require('../helpers/handlePassword.js');
+const { tokenSign } = require("../helpers/jwt");
 
 
 
@@ -120,7 +121,27 @@ const crearTurno = async(req,res,next)=>{
   }
 }
 
+// Login
+const login = async(req,res,next)=>{
+  try {
+    const {email,password,select} = req.body;
 
+    const respuestaDB = await Usuario.findByPk(email)
+    if(!respuestaDB) return res.status(401).send({message: 'El usuario no se encontró con ese email.'});
+    const passwordCorrecto = await checkPassword(password,respuestaDB.password);
+    
+    if(passwordCorrecto){
+      const tokenDeAcceso = await tokenSign(respuestaDB.dataValues,"2h")
+      res.status(200).send({usuario:respuestaDB,token:tokenDeAcceso})
+
+    }else {
+      res.status(401).send({message: `El usuario ${email} no está autorizado a ingresar.`});
+    }
+
+  } catch (e) {
+    next(e);
+  }
+}
 
 
 
@@ -191,5 +212,6 @@ module.exports = {
   crearProfesional,
   crearTurno,
   modificarTurno,
+  login
   
 };
