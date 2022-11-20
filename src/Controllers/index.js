@@ -57,7 +57,7 @@ const usuarios = async (req, res, next) => {
 //traer usuario por ID
 const usuarioPorId = async (req, res, next) => {
   const { idUsuario } = req.params;
-  console.log('id del usuario--->',idUsuario)
+  // console.log('id del usuario--->',idUsuario)
  
 
   try {
@@ -125,17 +125,28 @@ const crearTurno = async(req,res,next)=>{
 const login = async(req,res,next)=>{
   try {
     const {email,password,select} = req.body;
-
-    const respuestaDB = await Usuario.findByPk(email)
+    
+    //chequeamos el SELECT
+    if(select === 'usuario'){
+      var respuestaDB = await Usuario.findByPk(email);
+    }else if(select === 'profesional'){
+      var respuestaDB = await Profesional.findOne({where:{email:email,},include:{model:Turno}});
+    }else{
+      return res.status(404).send({message:'No se mandó el select de manera correcta'})
+    }
+    
+    //si no existe respuesta.
     if(!respuestaDB) return res.status(401).send({message: 'El usuario no se encontró con ese email.'});
     const passwordCorrecto = await checkPassword(password,respuestaDB.password);
     
+    //si el password es correcto manda usuario y token
     if(passwordCorrecto){
       const tokenDeAcceso = await tokenSign(respuestaDB.dataValues,"2h")
       res.status(200).send({usuario:respuestaDB,token:tokenDeAcceso})
 
     }else {
-      res.status(401).send({message: `El usuario ${email} no está autorizado a ingresar.`});
+      //password incorrecto
+      res.status(401).send({message: `El usuario ${email} no está autorizado a ingresar passord erróneo.`});
     }
 
   } catch (e) {
