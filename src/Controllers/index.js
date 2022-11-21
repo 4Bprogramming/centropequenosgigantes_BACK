@@ -1,7 +1,7 @@
 // aqui van a ir todos los cotroladores Profesionales, Usuario, etc. y distintos verbos GET POST PUT DELETE
 
 //importamos lo modelos de la DB
-const { Profesional, Usuario,Turno } = require("../db");
+const { Profesional, Usuario,Turno,Admin,Historiaclinica } = require("../db");
 //importamos funcion para hashear
 const {hashPassword,checkPassword} = require('../helpers/handlePassword.js');
 const { tokenSign } = require("../helpers/jwt");
@@ -155,6 +155,18 @@ const login = async(req,res,next)=>{
 }
 
 
+//Crear admin
+ const crearAdmin = async (req, res, next)=>{
+    try {
+      const nuevoAdmin = await Admin.create({...req.body})
+      if(!Admin) return res.status(401).send({message:'El usuario no ha podido ser creado, lo siento. '})
+        res.status(200).send({message:'Aministrador, creado con éxito',nuevoAdmin})
+      
+    } catch (e) {
+      next(e)
+    }
+ }
+
 
 //***********PUT**********/
 // Reservar el turno por el usuario.
@@ -223,6 +235,7 @@ module.exports = {
   crearProfesional,
   crearTurno,
   modificarTurno,
-  login
+  login,
+  crearAdmin
   
 };
