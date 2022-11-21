@@ -55,8 +55,7 @@ Turno.belongsTo(Usuario);
 Historiaclinica.hasOne(Usuario);
 Usuario.belongsTo(Historiaclinica);
 
-Admin.hasMany(Turno);
-Turno.belongsTo(Admin)
+
 // Professional.hasMany(Appointment )
 // Appointment.belongsTo(Professional)
 

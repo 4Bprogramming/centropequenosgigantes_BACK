@@ -42,5 +42,53 @@ const validadorDeDatos = [
     }
 ]
 
+const validadorDeAdmin = [
+    //validamos email
+    
+    check("email")
+    .trim()
+    .notEmpty().withMessage("Este campo no puede estar vacío")
+    .isEmail().withMessage("El email debe ser válido")
+    .normalizeEmail(),
 
-module.exports = {validadorDeDatos}
+
+    //validamos password
+    check("password")
+    .trim()
+    .notEmpty().withMessage("Se necesita un password obligatorio")
+    .isLength({ min: 8, max: 15 }).withMessage("El password debe tener entre: min 8, max 15"),
+
+    (req, res, next) => {
+        try {
+            validationResult(req).throw()
+            return next() //si pasa validaciones, sigue hacia el controlador
+        } catch (err) {
+            res.status(400).send({ errors: err.array() })
+        }
+    }
+]
+
+const sanitizador = [
+      //limpiamos 
+      check("nombre")
+      .trim()
+      .isAlpha('es-ES', { ignore: ' ' }).withMessage("Ingrese solo letras"),
+      
+  
+      //limpiamos apellido
+      check("apellido")
+      .trim()
+      .isAlpha('es-ES', { ignore: ' ' }).withMessage("Ingrese sólo letras"),
+    
+
+    (req, res, next) => {
+        try {
+            validationResult(req).throw()
+            return next() //si pasa validaciones, sigue hacia el controlador
+        } catch (err) {
+            res.status(400).send({ errors: err.array() })
+        }
+    }
+]
+
+module.exports = {validadorDeDatos,validadorDeAdmin,sanitizador}
