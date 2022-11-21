@@ -34,6 +34,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: true,
   },
+  especialidad:{
+    type:DataTypes.STRING,
+    allowNull:true
+  },
   fullName: {
     type: DataTypes.VIRTUAL,
     get() {
