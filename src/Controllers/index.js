@@ -146,7 +146,7 @@ const login = async(req,res,next)=>{
 
     }else {
       //password incorrecto
-      res.status(401).send({message: `El usuario ${email} no está autorizado a ingresar passord erróneo.`});
+      res.status(401).send({message: `El usuario ${email} no está autorizado a ingresar password erróneo.`});
     }
 
   } catch (e) {
