@@ -1,12 +1,14 @@
 // aqui van a ir todos los cotroladores Profesionales, Usuario, etc. y distintos verbos GET POST PUT DELETE
 
 //importamos lo modelos de la DB
-const { Profesional, Usuario,Turno } = require("../db");
+const { Profesional, Usuario,Turno,Admin,Historiaclinica } = require("../db");
 //importamos funcion para hashear
 const {hashPassword,checkPassword} = require('../helpers/handlePassword.js');
 const { tokenSign } = require("../helpers/jwt");
 
 
+
+//********************************************************GET**************************************** */
 
 //traer todos los profesionales
 const profesionales = async (req, res, next) => {
@@ -44,7 +46,7 @@ const profesionalPorId = async (req, res, next) => {
 // traer todos los usuarios
 const usuarios = async (req, res, next) => {
   try {
-    const usuarios = await Usuario.findAll({ include: Turno });
+    const usuarios = await Usuario.findAll({ include: Turno,Historiaclinica });
     if (usuarios.length === 0)
       return res.status(404).send({ message: "No se encontraron usuarios" });
     res.status(200).send(usuarios);
@@ -61,7 +63,7 @@ const usuarioPorId = async (req, res, next) => {
  
 
   try {
-    const usuarioPorId = await Usuario.findOne({where:{idUsuario:idUsuario,},include:{model:Turno}});
+    const usuarioPorId = await Usuario.findOne({where:{idUsuario:idUsuario},include:{model:Turno,Historiaclinica}});
     if (usuarioPorId) {
       res.status(200).send(usuarioPorId);
     } else {
@@ -76,7 +78,7 @@ const usuarioPorId = async (req, res, next) => {
 
 
 
-// **************** POSTS ************************//
+// *********************************************** POSTS ********************************************//
 
 
 //crear usuario
@@ -131,8 +133,12 @@ const login = async(req,res,next)=>{
       var respuestaDB = await Usuario.findByPk(email,{include:{model:Turno}});
     }else if(select === 'profesional'){
       var respuestaDB = await Profesional.findOne({where:{email:email,},include:{model:Turno}});
-    }else{
-      return res.status(404).send({message:`el select debe ser 'usuario' o 'profesional' el valor fue ${select}` })
+    }else if(select === 'administrador'){
+      var respuestaDB = await Admin.findByPk(email)
+    }
+    
+    else{
+      return res.status(404).send({message:`el select debe ser 'usuario', 'profesional' o 'administrador' el valor fue ${select}` })
     }
     
     //si no existe respuesta.
@@ -155,8 +161,21 @@ const login = async(req,res,next)=>{
 }
 
 
+//Crear admin
+ const crearAdmin = async (req, res, next)=>{
+    try {
+      const hashedPassword = await hashPassword(req.body.password);
+      const nuevoAdmin = await Admin.create({...req.body,password:hashedPassword})
+      if(!Admin) return res.status(401).send({message:'El usuario no ha podido ser creado, lo siento. '})
+        res.status(200).send({message:'Aministrador, creado con éxito',nuevoAdmin})
+      
+    } catch (e) {
+      next(e)
+    }
+ }
 
-//***********PUT**********/
+
+//********************************************PUT******************************************/
 // Reservar el turno por el usuario.
 
 const modificarTurno = async(req,res,next)=>{
@@ -214,6 +233,35 @@ const modificarTurno = async(req,res,next)=>{
 }
 
 
+const editarprofesional = async (req,res,next)=>{
+
+  try {
+    const {idProfesional} = req.params;
+    const profesionalEditado = await Profesional.findByPk(idProfesional);
+    if(!profesionalEditado) return res.status(404).send({message: 'No se pudo encontrar el profesional para editarlo'})
+      profesionalEditado?.update({...req.body})
+      res.status(201).send({message:'El profesional fue editado', profesional:profesionalEditado})
+  } catch (e) {
+      next(e)
+  }
+}
+
+
+//editar usuario 
+const editarusuario = async (req,res,next)=>{
+
+  try {
+    const {idUsuario} = req.params;
+    const usuarioEditado = await Usuario.findOne({where:{idUsuario:idUsuario}});
+    if(!usuarioEditado) return res.status(404).send({message: 'No se pudo encontrar el usuario para editarlo'})
+      usuarioEditado?.update({...req.body})
+      res.status(201).send({message:'El usuario fue editado', usuario:usuarioEditado})
+  } catch (e) {
+      next(e)
+  }
+}
+
+
 module.exports = {
   profesionales,
   profesionalPorId,
@@ -223,6 +271,9 @@ module.exports = {
   crearProfesional,
   crearTurno,
   modificarTurno,
-  login
+  login,
+  crearAdmin,
+  editarprofesional,
+  editarusuario
   
 };

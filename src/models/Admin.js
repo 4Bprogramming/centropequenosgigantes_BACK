@@ -3,20 +3,15 @@ const { DataTypes } = require('sequelize');
 // Luego le injectamos la conexion a sequelize.
 module.exports = (sequelize) => {
   // defino el modelo
-  sequelize.define('historiaclinica', {
-    id_hc: {
+  sequelize.define('admin', {
+    email:{
       primaryKey: true,
       type: DataTypes.STRING,
       allowNull: false,
     },
-    mensaje:{
-        type: DataTypes.TEXT
-    },
-    fecha:{
+    password:{
         type:DataTypes.STRING,
-    },
-    hora:{
-        type: DataTypes.STRING
+        allowNull:false
     }
   },{
     freezeTableName: true,
