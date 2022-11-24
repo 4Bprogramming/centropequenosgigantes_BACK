@@ -46,7 +46,7 @@ const profesionalPorId = async (req, res, next) => {
 // traer todos los usuarios
 const usuarios = async (req, res, next) => {
   try {
-    const usuarios = await Usuario.findAll({ include: Turno,Historiaclinica });
+    const usuarios = await Usuario.findAll({include:[{model:Turno,include:[Historiaclinica]}]});
     if (usuarios.length === 0)
       return res.status(404).send({ message: "No se encontraron usuarios" });
     res.status(200).send(usuarios);
@@ -56,20 +56,20 @@ const usuarios = async (req, res, next) => {
 };
 
 
-//traer usuario por ID
-const usuarioPorId = async (req, res, next) => {
-  const { idUsuario } = req.params;
+//traer usuario por Email (PK)
+const usuarioPorEmail = async (req, res, next) => {
+  const { email } = req.params;
   // console.log('id del usuario--->',idUsuario)
  
 
   try {
-    const usuarioPorId = await Usuario.findOne({where:{idUsuario:idUsuario},include:{model:Turno,Historiaclinica}});
-    if (usuarioPorId) {
-      res.status(200).send(usuarioPorId);
+    const usuarioPorMail = await Usuario.findByPk(email,{include:[{model:Turno,include:[Historiaclinica]}]});
+    if (usuarioPorMail) {
+      res.status(200).send(usuarioPorMail);
     } else {
       return res
         .status(404)
-        .send({ message: "El usuario buscado por ID no se encontró" });
+        .send({ message: "El usuario buscado por email no se encontró" });
     }
   } catch (e) {
     next(e);
@@ -175,6 +175,21 @@ const login = async(req,res,next)=>{
  }
 
 
+// Crear historia clinica
+const crearHistoriaClinica = async (req,res,next)=>{
+  try {
+    const historiaClinicaCreada = await Historiaclinica.create({...req.body})
+    if(!historiaClinicaCreada) return res.status(401).send({message: 'La historia clinica no pudo ser creada.'})
+      res.status(200).send({message:'Historia clinica creada con exito.',historiaClinicaCreada})
+
+  } catch (e) {
+    next(e)
+  }
+}
+
+
+
+
 //********************************************PUT******************************************/
 // Reservar el turno por el usuario.
 
@@ -266,7 +281,7 @@ module.exports = {
   profesionales,
   profesionalPorId,
   usuarios,
-  usuarioPorId,
+  usuarioPorEmail,
   crearUsuario,
   crearProfesional,
   crearTurno,
@@ -274,6 +289,7 @@ module.exports = {
   login,
   crearAdmin,
   editarprofesional,
-  editarusuario
+  editarusuario,
+  crearHistoriaClinica
   
 };

@@ -6,7 +6,8 @@ module.exports = (sequelize) => {
   sequelize.define('historiaclinica', {
     id_hc: {
       primaryKey: true,
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV1,
       allowNull: false,
     },
     mensaje:{
