@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const {profesionales,profesionalPorId,usuarios,usuarioPorEmail,crearUsuario,crearProfesional,crearTurno,modificarTurno,login,crearAdmin,editarprofesional,editarusuario,crearHistoriaClinica} = require('../Controllers')
+const {profesionales,profesionalPorId,usuarios,usuarioPorEmail,crearUsuario,crearProfesional,crearTurno,modificarTurno,login,crearAdmin,editarprofesional,editarusuario,crearHistoriaClinica,debajaOdealta} = require('../Controllers')
 const router = Router();
 //importamos helper para validar el body
 const {validadorDeDatos,validadorDeAdmin,sanitizador} = require('../helpers/validations');
@@ -40,6 +40,10 @@ router.post('/historiaclinica',crearHistoriaClinica)
 router.put('/turnos',tokenVerify,modificarTurno);
 router.put('/editarprofesional/:idProfesional',sanitizador,editarprofesional)
 router.put('/editarusuario/:email',sanitizador,editarusuario)
+
+//dar de baja usuario, admin o profesional --> se modifica el active a False.
+router.put('/altabaja/:email',debajaOdealta);
+
 
 
 
