@@ -59,9 +59,6 @@ const usuarios = async (req, res, next) => {
 //traer usuario por Email (PK)
 const usuarioPorEmail = async (req, res, next) => {
   const { email } = req.params;
-  // console.log('id del usuario--->',idUsuario)
- 
-
   try {
     const usuarioPorMail = await Usuario.findByPk(email,{include:[{model:Turno,include:[Historiaclinica]}]});
     if (usuarioPorMail) {
@@ -266,8 +263,8 @@ const editarprofesional = async (req,res,next)=>{
 const editarusuario = async (req,res,next)=>{
 
   try {
-    const {idUsuario} = req.params;
-    const usuarioEditado = await Usuario.findOne({where:{idUsuario:idUsuario}});
+    const {email} = req.params;
+    const usuarioEditado = await Usuario.findByPk(email);
     if(!usuarioEditado) return res.status(404).send({message: 'No se pudo encontrar el usuario para editarlo'})
       usuarioEditado?.update({...req.body})
       res.status(201).send({message:'El usuario fue editado', usuario:usuarioEditado})

@@ -39,7 +39,7 @@ router.post('/historiaclinica',crearHistoriaClinica)
 //***PUT --> (UPDATE)***/
 router.put('/turnos',tokenVerify,modificarTurno);
 router.put('/editarprofesional/:idProfesional',sanitizador,editarprofesional)
-router.put('/editarusuario/:idUsuario',sanitizador,editarusuario)
+router.put('/editarusuario/:email',sanitizador,editarusuario)
 
 
 
