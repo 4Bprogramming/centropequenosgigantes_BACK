@@ -80,6 +80,36 @@ const usuarioPorEmail = async (req, res, next) => {
   }
 };
 
+/// historias clinicas
+const traerHistoriaClinica = async (req,res,next)=>{
+  try {
+    const historiasClinicas = await Historiaclinica.findAll();
+    if(!historiasClinicas) return res.status(404).send({message:'No se encontró ninguna historia clínica'});
+      res.status(200).send(historiasClinicas);
+  } catch (e) {
+    next(e)
+  }
+}
+
+// traer todos los turnos
+
+const traerTurnos = async (req,res,next)=>{
+  try {
+    const todosLosTurnos = await Turno.findAll();
+    if(!todosLosTurnos) return res.status(404).send({message:'No se encontró ningun turno'});
+      res.status(200).send(todosLosTurnos);
+  } catch (e) {
+    next(e)
+  }
+}
+
+//  trae un turno por ID
+
+
+
+
+
+
 // *********************************************** POSTS ********************************************//
 
 //crear usuario
@@ -308,7 +338,7 @@ const editarusuario = async (req, res, next) => {
   }
 };
 
-//*********************************DAR DE BAJA**************************** */
+//*********************************DAR DE BAJA O DE ALTA**************************** */
 
 const debajaOdealta = async (req, res, next) => {
   try {
@@ -365,4 +395,6 @@ module.exports = {
   editarusuario,
   crearHistoriaClinica,
   debajaOdealta,
+  traerHistoriaClinica,
+  traerTurnos
 };
