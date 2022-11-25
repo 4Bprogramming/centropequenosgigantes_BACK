@@ -91,6 +91,20 @@ const traerHistoriaClinica = async (req,res,next)=>{
   }
 }
 
+//Historia clinica por ID
+
+const traerHistoriaClinicaPorID = async(req,res,next)=>{
+  try {
+    const {id} = req.params;
+    const HistoriaClinicaPorID = await Historiaclinica.findByPk(id);
+    if(!HistoriaClinicaPorID) return res.status(404).send({message:'La historia clinica por id no ha sido encontrada.'});
+     res.status(200).send({message:'La historia clinica ha sido encontrada',HistoriaClinica:HistoriaClinicaPorID})
+  } catch (e) {
+      next(e)
+  }
+}
+
+
 // traer todos los turnos
 
 const traerTurnos = async (req,res,next)=>{
@@ -104,7 +118,18 @@ const traerTurnos = async (req,res,next)=>{
 }
 
 //  trae un turno por ID
+const traerTurnoPorID = async (req,res,next)=>{
+  try {
+    const {id} = req.params;
+    const turnoPorId = await Turno.findByPk(id);
+    if(!turnoPorId) return res.status(404).send({message:'El turno por id no ha sido encontrado.'});
+     res.status(200).send({message:'El turno ha sido encontrado',turno:turnoPorId})
+    
 
+  } catch (e) {
+    next(e)
+  }
+}
 
 
 
@@ -396,5 +421,7 @@ module.exports = {
   crearHistoriaClinica,
   debajaOdealta,
   traerHistoriaClinica,
-  traerTurnos
+  traerHistoriaClinicaPorID,
+  traerTurnos,
+  traerTurnoPorID
 };
