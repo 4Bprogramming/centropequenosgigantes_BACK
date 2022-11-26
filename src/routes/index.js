@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const {profesionales,profesionalPorId,usuarios,usuarioPorEmail,crearUsuario,crearProfesional,crearTurno,modificarTurno,login,crearAdmin,editarprofesional,editarusuario,crearHistoriaClinica,debajaOdealta,traerHistoriaClinica,traerTurnos} = require('../Controllers')
+const {profesionales,profesionalPorId,usuarios,usuarioPorEmail,crearUsuario,crearProfesional,crearTurno,modificarTurno,login,crearAdmin,editarprofesional,editarusuario,crearHistoriaClinica,debajaOdealta,traerHistoriaClinica,traerHistoriaClinicaPorID,traerTurnos,traerTurnoPorID} = require('../Controllers')
 const router = Router();
 //importamos helper para validar el body
 const {validadorDeDatos,validadorDeAdmin,sanitizador} = require('../helpers/validations');
@@ -22,10 +22,17 @@ router.get ('/usuarios',tokenVerify,usuarios)
 router.get ('/usuarios/:email',tokenVerify,usuarioPorEmail);
 
 //traer historias clinicas
-router.get('/historiaclinica',traerHistoriaClinica)
+router.get('/historiaclinica',traerHistoriaClinica);
+
+//traer historia clinica por ID
+router.get('/historiaclinica/:id',traerHistoriaClinicaPorID)
 
 // traer todos los turnos
-router.get('/turnos',traerTurnos)
+router.get('/turnos',traerTurnos);
+
+// traer turno por ID
+router.get('/turnos/:id',traerTurnoPorID);
+
 
 
 //***POSTS*****/
@@ -48,12 +55,6 @@ router.put('/editarusuario/:email',sanitizador,editarusuario)
 
 //dar de baja usuario, admin o profesional --> se modifica el active a False.
 router.put('/altabaja/:email',debajaOdealta);
-
-
-
-
-
-
 
 
 
