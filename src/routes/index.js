@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const {profesionales,profesionalPorId,usuarios,usuarioPorEmail,crearUsuario,crearProfesional,crearTurno,modificarTurno,login,crearAdmin,editarprofesional,editarusuario,crearHistoriaClinica,debajaOdealta,traerHistoriaClinica,traerHistoriaClinicaPorID,traerTurnos,traerTurnoPorID} = require('../Controllers')
+const {profesionales,profesionalPorId,usuarios,usuarioPorEmail,crearUsuario,crearProfesional,crearTurno,modificarTurno,login,crearAdmin,editarprofesional,editarusuario,crearHistoriaClinica,debajaOdealta,traerHistoriaClinica,traerHistoriaClinicaPorID,traerTurnos,traerTurnoPorID,passwordOlvidado,resetPassword} = require('../Controllers')
 const router = Router();
 //importamos helper para validar el body
 const {validadorDeDatos,validadorDeAdmin,sanitizador} = require('../helpers/validations');
@@ -57,5 +57,13 @@ router.put('/editarusuario/:email',sanitizador,editarusuario)
 router.put('/altabaja/:email',debajaOdealta);
 
 
+//***SECCION SOLO PARA PASSWORD y NODEMAILER */
+// password olvidado
+router.post("/password-olvidado", passwordOlvidado);
+
+//una vez hace clic en el link lo lleva a una form que debe llenar 
+//y esta form se manda a este post
+router.post('/resetPassword',tokenVerify,resetPassword);
+//****************************************************/
 
 module.exports = router;
