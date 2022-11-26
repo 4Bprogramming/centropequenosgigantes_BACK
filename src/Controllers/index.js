@@ -12,6 +12,7 @@ const {
 const { hashPassword, checkPassword } = require("../helpers/handlePassword.js");
 const { tokenSign } = require("../helpers/jwt");
 
+
 //********************************************************GET**************************************** */
 
 //traer todos los profesionales
@@ -81,59 +82,67 @@ const usuarioPorEmail = async (req, res, next) => {
 };
 
 /// historias clinicas
-const traerHistoriaClinica = async (req,res,next)=>{
+const traerHistoriaClinica = async (req, res, next) => {
   try {
     const historiasClinicas = await Historiaclinica.findAll();
-    if(!historiasClinicas) return res.status(404).send({message:'No se encontró ninguna historia clínica'});
-      res.status(200).send(historiasClinicas);
+    if (!historiasClinicas)
+      return res
+        .status(404)
+        .send({ message: "No se encontró ninguna historia clínica" });
+    res.status(200).send(historiasClinicas);
   } catch (e) {
-    next(e)
+    next(e);
   }
-}
+};
 
 //Historia clinica por ID
 
-const traerHistoriaClinicaPorID = async(req,res,next)=>{
+const traerHistoriaClinicaPorID = async (req, res, next) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const HistoriaClinicaPorID = await Historiaclinica.findByPk(id);
-    if(!HistoriaClinicaPorID) return res.status(404).send({message:'La historia clinica por id no ha sido encontrada.'});
-     res.status(200).send({message:'La historia clinica ha sido encontrada',HistoriaClinica:HistoriaClinicaPorID})
+    if (!HistoriaClinicaPorID)
+      return res
+        .status(404)
+        .send({ message: "La historia clinica por id no ha sido encontrada." });
+    res.status(200).send({
+      message: "La historia clinica ha sido encontrada",
+      HistoriaClinica: HistoriaClinicaPorID,
+    });
   } catch (e) {
-      next(e)
+    next(e);
   }
-}
-
+};
 
 // traer todos los turnos
 
-const traerTurnos = async (req,res,next)=>{
+const traerTurnos = async (req, res, next) => {
   try {
     const todosLosTurnos = await Turno.findAll();
-    if(!todosLosTurnos) return res.status(404).send({message:'No se encontró ningun turno'});
-      res.status(200).send(todosLosTurnos);
+    if (!todosLosTurnos)
+      return res.status(404).send({ message: "No se encontró ningun turno" });
+    res.status(200).send(todosLosTurnos);
   } catch (e) {
-    next(e)
+    next(e);
   }
-}
+};
 
 //  trae un turno por ID
-const traerTurnoPorID = async (req,res,next)=>{
+const traerTurnoPorID = async (req, res, next) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const turnoPorId = await Turno.findByPk(id);
-    if(!turnoPorId) return res.status(404).send({message:'El turno por id no ha sido encontrado.'});
-     res.status(200).send({message:'El turno ha sido encontrado',turno:turnoPorId})
-    
-
+    if (!turnoPorId)
+      return res
+        .status(404)
+        .send({ message: "El turno por id no ha sido encontrado." });
+    res
+      .status(200)
+      .send({ message: "El turno ha sido encontrado", turno: turnoPorId });
   } catch (e) {
-    next(e)
+    next(e);
   }
-}
-
-
-
-
+};
 
 // *********************************************** POSTS ********************************************//
 
@@ -207,15 +216,6 @@ const login = async (req, res, next) => {
       });
     }
 
-    // olvido password, crea uno nuevo
-    const passwordOlvidado = async(req,res,next)=>{
-      try{
-        
-      }catch(e){
-        next(e)
-      }
-    }
-
     //si no existe respuesta.
     if (!respuestaDB)
       return res
@@ -273,6 +273,129 @@ const crearHistoriaClinica = async (req, res, next) => {
       message: "Historia clinica creada con exito.",
       historiaClinicaCreada,
     });
+  } catch (e) {
+    next(e);
+  }
+};
+
+//*******************Configuracion de NODEMAILER************ */
+const nodemailer = require("nodemailer");
+const res = require("express/lib/response");
+//creamos el transporter
+const transporter = nodemailer.createTransport({
+  host: "smtp.ethereal.email",
+  port: 587,
+  secure: false,
+  auth: {
+    user: "helmer.erdman@ethereal.email",
+    pass: "bbyeVgJk52fNBacFxC",
+  },
+  tls: {
+    rejectUnauthorized: false, // sin esto no funciona.Ver esto en producción
+  },
+});
+
+//********** PASSWORD OLVIDADO*****ATENCION A ESTAS FUNCIONES*********/
+const passwordOlvidado = async (req, res, next) => {
+  try {
+
+    const { email, select } = req.body;
+    //chequeamos el SELECT
+    if (select === "usuario") {
+      var rolBuscadoEnDB = await Usuario.findByPk(email, {
+        
+      });
+    } else if (select === "profesional") {
+      var rolBuscadoEnDB = await Profesional.findOne({
+        where: { email: email }
+        
+      });
+    } else if (select === "administrador") {
+      var rolBuscadoEnDB = await Admin.findByPk(email);
+    } else {
+      return res.status(404).send({
+        message: `el select debe ser 'usuario', 'profesional' o 'administrador' el valor fue ${select}`,
+      });
+    }
+
+    //si no existe respuesta.
+    if (!rolBuscadoEnDB)return res.status(401).send({ message: `El ${select} no se encontró con ese email.` });
+
+    //crear un token para devolver  y sera usado para crear el nuevo password
+    const usuario = {
+      email: rolBuscadoEnDB.email,
+    };
+
+    //firmamos token
+    const token = await tokenSign(usuario, "15m");
+
+    //armamos el link para resetear
+    const link = `localhost:3001/resetPassword`; //ver en front cual es el LINK que abre la FORM
+
+    //armamos template para enviar
+    const mailDetails = {
+      from: "carlosvazqueznosetto@gmail.com",
+      to: usuario.email,
+      subject: "Recuperar el password",
+      html: `<h2>Servicio de recuperacion de contraseña</h2>
+          <p>Para resetear el password, hace click en el siguiente Link</p>
+          <a href="${link}" target="_blank">Reset contraseña</a>
+          `,
+    };
+    //usamos el transporter para enviar el mail con el magic-link
+    transporter.sendMail(mailDetails, (err, info) => {
+      if (err) {
+        return res.status(500).send(err.message);
+      } else {
+        res.status(200).json({
+          message: `Hola, ¿Cómo estás?, te hemos enviado un email a ${usuario.email}`,
+          token: token,
+        });
+      }
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+//*******resetear el password****** */
+//el token viene porque se creo un link anterior con ese token en la funcion
+// si o si hay que incluir el TOKEN en los headers del FRONT
+const resetPassword = async (req, res, next) => {
+  try {
+    const { password, email, select } = req.body;
+
+    //chequeamos el SELECT
+    if (select === "usuario") {
+      var rolDB = await Usuario.findByPk(email, {
+        include: { model: Turno },
+      });
+    } else if (select === "profesional") {
+      var rolDB = await Profesional.findOne({
+        where: { email: email },
+        include: { model: Turno },
+      });
+    } else if (select === "administrador") {
+      var rolDB = await Admin.findByPk(email);
+    } else {
+      return res.status(404).send({
+        message: `el select debe ser 'usuario', 'profesional' o 'administrador' el valor fue ${select}`,
+      });
+    }
+
+    //si no existe respuesta.
+    if (!rolDB)return res.status(401).send({ message: `El ${select} no se encontró con ese email.` });
+
+    //hasheamos password nuevamente
+    const hashedPassword = await hashPassword(password);
+    const usuarioActualizado = await rolDB?.update({
+      password: hashedPassword,
+    });
+    if (!usuarioActualizado) {
+        return res.status(401).send({ message: "El usuario no ha podido ser editado, lo siento. " });
+    } else {
+        res.status(200).send({ message: "Usuario, actualizado con exito" });
+    }
   } catch (e) {
     next(e);
   }
@@ -384,31 +507,29 @@ const debajaOdealta = async (req, res, next) => {
 
     if (select === "usuario") {
       var resDB = await Usuario.findByPk(email);
-      
-      
     } else if (select === "profesional") {
       var resDB = await Profesional.findOne({ where: { email: email } });
-     
     } else if (select === "administrador") {
       var resDB = await Admin.findByPk(email);
-    } else{
+    } else {
       return res.status(404).send({
         message: `el select debe ser 'usuario', 'profesional' o 'administrador' el valor fue ${select}`,
       });
     }
-    
-    if (!resDB){
+
+    if (!resDB) {
       return res.status(404).send({
-        message: `Usted esta buscando a un ${select} que no se encuentra con ese email.`
+        message: `Usted esta buscando a un ${select} que no se encuentra con ese email.`,
       });
-    }else{
-      resDB.active === true ? bajaOalta = 'eliminado' : bajaOalta = 'recuperado';
+    } else {
+      resDB.active === true
+        ? (bajaOalta = "eliminado")
+        : (bajaOalta = "recuperado");
       await resDB?.update({ active: !resDB.active });
       res
         .status(200)
         .send({ message: `El ${select} fue ${bajaOalta} con éxito.` });
     }
-   
   } catch (e) {
     next(e);
   }
@@ -432,5 +553,7 @@ module.exports = {
   traerHistoriaClinica,
   traerHistoriaClinicaPorID,
   traerTurnos,
-  traerTurnoPorID
+  traerTurnoPorID,
+  passwordOlvidado,
+  resetPassword,
 };
