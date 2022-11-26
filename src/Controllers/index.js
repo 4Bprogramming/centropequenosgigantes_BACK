@@ -207,6 +207,15 @@ const login = async (req, res, next) => {
       });
     }
 
+    // olvido password, crea uno nuevo
+    const passwordOlvidado = async(req,res,next)=>{
+      try{
+        
+      }catch(e){
+        next(e)
+      }
+    }
+
     //si no existe respuesta.
     if (!respuestaDB)
       return res

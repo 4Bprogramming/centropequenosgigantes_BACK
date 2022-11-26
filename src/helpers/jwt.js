@@ -8,8 +8,6 @@ const tokenSign = async (user, time) => {
 };
 
 
-
-
 //verificador de token
 const tokenVerify = async (req,res,next) => {
  
