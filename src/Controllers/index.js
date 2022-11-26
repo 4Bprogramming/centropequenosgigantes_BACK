@@ -11,7 +11,7 @@ const {
 //importamos funcion para hashear
 const { hashPassword, checkPassword } = require("../helpers/handlePassword.js");
 const { tokenSign } = require("../helpers/jwt");
-const { tokenVerify } = require("../helpers/jwt");
+
 
 //********************************************************GET**************************************** */
 
@@ -298,22 +298,39 @@ const transporter = nodemailer.createTransport({
 //********** PASSWORD OLVIDADO*****ATENCION A ESTAS FUNCIONES*********/
 const passwordOlvidado = async (req, res, next) => {
   try {
-    const dbResponse = await Usuario.findByPk(req.body.email);
-    if (!dbResponse)
-      return res.status(404).send({ message: "El usuario no fue encontrado" });
 
-    //crear un magic-link con un token de seguridad con un objeto
+    const { email, select } = req.body;
+    //chequeamos el SELECT
+    if (select === "usuario") {
+      var rolBuscadoEnDB = await Usuario.findByPk(email, {
+        
+      });
+    } else if (select === "profesional") {
+      var rolBuscadoEnDB = await Profesional.findOne({
+        where: { email: email }
+        
+      });
+    } else if (select === "administrador") {
+      var rolBuscadoEnDB = await Admin.findByPk(email);
+    } else {
+      return res.status(404).send({
+        message: `el select debe ser 'usuario', 'profesional' o 'administrador' el valor fue ${select}`,
+      });
+    }
+
+    //si no existe respuesta.
+    if (!rolBuscadoEnDB)return res.status(401).send({ message: `El ${select} no se encontró con ese email.` });
+
+    //crear un token para devolver  y sera usado para crear el nuevo password
     const usuario = {
-      id: dbResponse.idUsuario,
-      nombre: dbResponse.nombre,
-      email: dbResponse.email,
+      email: rolBuscadoEnDB.email,
     };
 
     //firmamos token
     const token = await tokenSign(usuario, "15m");
 
     //armamos el link para resetear
-    const link = `localhost:3001/resetPassword`;
+    const link = `localhost:3001/resetPassword`; //ver en front cual es el LINK que abre la FORM
 
     //armamos template para enviar
     const mailDetails = {
@@ -331,7 +348,7 @@ const passwordOlvidado = async (req, res, next) => {
         return res.status(500).send(err.message);
       } else {
         res.status(200).json({
-          message: `Hola ${usuario.nombre}, te hemos enviado un email a ${usuario.email}`,
+          message: `Hola, ¿Cómo estás?, te hemos enviado un email a ${usuario.email}`,
           token: token,
         });
       }
@@ -343,6 +360,7 @@ const passwordOlvidado = async (req, res, next) => {
 
 //*******resetear el password****** */
 //el token viene porque se creo un link anterior con ese token en la funcion
+// si o si hay que incluir el TOKEN en los headers del FRONT
 const resetPassword = async (req, res, next) => {
   try {
     const { password, email, select } = req.body;
@@ -366,8 +384,9 @@ const resetPassword = async (req, res, next) => {
     }
 
     //si no existe respuesta.
-    if (!rolDB)return res.status(401).send({ message: "El usuario no se encontró con ese email." });
+    if (!rolDB)return res.status(401).send({ message: `El ${select} no se encontró con ese email.` });
 
+    //hasheamos password nuevamente
     const hashedPassword = await hashPassword(password);
     const usuarioActualizado = await rolDB?.update({
       password: hashedPassword,
