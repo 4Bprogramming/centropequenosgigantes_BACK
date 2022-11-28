@@ -38,6 +38,10 @@ module.exports = (sequelize) => {
     type:DataTypes.STRING,
     allowNull:true
   },
+  celular:{
+    type:DataTypes.STRING,
+    allowNull:true
+  },
   fullName: {
     type: DataTypes.VIRTUAL,
     get() {
