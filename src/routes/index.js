@@ -37,12 +37,15 @@ router.get('/turnos/:id',traerTurnoPorID);
 
 //***POSTS*****/
 router.post('/usuarios',validadorDeDatos,crearUsuario);
-router.post('/profesionales',validadorDeDatos,tokenVerify,crearProfesional);
-router.post('/turnos',tokenVerify,crearTurno);
+// router.post('/profesionales',validadorDeDatos,tokenVerify,crearProfesional);
+router.post('/profesionales',validadorDeDatos,crearProfesional);
+// router.post('/turnos',tokenVerify,crearTurno);
+router.post('/turnos',crearTurno);
 //login
 router.post('/login',login);
 // Crear un Admin Admin
-router.post('/crearadmin',validadorDeAdmin,tokenVerify,crearAdmin);
+// router.post('/crearadmin',validadorDeAdmin,tokenVerify,crearAdmin);
+router.post('/crearadmin',validadorDeAdmin,crearAdmin);
 
 //Crear historia clinica
 router.post('/historiaclinica',crearHistoriaClinica)
