@@ -16,10 +16,10 @@ router.get("/profesionales", profesionales);
 router.get("/profesionales/:idProfesional",profesionalPorId);
 
 //buscar todos los usuarios
-router.get ('/usuarios',tokenVerify,usuarios)
+router.get ('/usuarios',usuarios)
 
 // buscar usuario por Email
-router.get ('/usuarios/:email',tokenVerify,usuarioPorEmail);
+router.get ('/usuarios/:email',usuarioPorEmail);
 
 //traer historias clinicas
 router.get('/historiaclinica',traerHistoriaClinica);
@@ -37,8 +37,8 @@ router.get('/turnos/:id',traerTurnoPorID);
 
 //***POSTS*****/
 router.post('/usuarios',validadorDeDatos,crearUsuario);
-router.post('/profesionales',validadorDeDatos,tokenVerify,crearProfesional);
-router.post('/turnos',tokenVerify,crearTurno);
+router.post('/profesionales',validadorDeDatos,crearProfesional);
+router.post('/turnos',crearTurno);
 //login
 router.post('/login',login);
 // Crear un Admin Admin
@@ -49,7 +49,7 @@ router.post('/historiaclinica',crearHistoriaClinica)
 
 
 //***PUT --> (UPDATE)***/
-router.put('/turnos',tokenVerify,modificarTurno);
+router.put('/turnos',modificarTurno);
 router.put('/editarprofesional/:idProfesional',sanitizador,editarprofesional)
 router.put('/editarusuario/:email',sanitizador,editarusuario)
 
