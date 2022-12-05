@@ -36,8 +36,8 @@ router.get('/turnos/:id',tokenVerify,tokenVerify,traerTurnoPorID);
 
 
 //***POSTS*****/
-router.post('/usuarios',validadorDeDatos,tokenVerify,crearUsuario);
-router.post('/profesionales',validadorDeDatos,tokenVerify,crearProfesional);
+router.post('/usuarios',validadorDeDatos,crearUsuario);
+router.post('/profesionales',validadorDeDatos,crearProfesional);
 router.post('/turnos',tokenVerify,crearTurno);
 //login
 router.post('/login',login);
