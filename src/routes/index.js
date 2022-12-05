@@ -16,10 +16,10 @@ router.get("/profesionales",tokenVerify, profesionales);
 router.get("/profesionales/:idProfesional",tokenVerify,profesionalPorId);
 
 //buscar todos los usuarios
-router.get ('/usuarios',tokenVerify,usuarios)
+router.get ('/usuarios',usuarios)
 
 // buscar usuario por Email
-router.get ('/usuarios/:email',tokenVerify,usuarioPorEmail);
+router.get ('/usuarios/:email',usuarioPorEmail);
 
 //traer historias clinicas
 router.get('/historiaclinica',tokenVerify,traerHistoriaClinica);
