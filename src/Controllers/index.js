@@ -17,6 +17,7 @@ const { tokenSign } = require("../helpers/jwt");
 
 //traer todos los profesionales
 const profesionales = async (req, res, next) => {
+  
   try {
     const profesionales = await Profesional.findAll({ include: Turno });
     if (profesionales.length === 0)
