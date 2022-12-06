@@ -165,6 +165,7 @@ const crearUsuario = async (req, res, next) => {
 
 //crear profesional
 const crearProfesional = async (req, res, next) => {
+  console.log('llegue', req.body);
   try {
     const hashedPassword = await hashPassword(req.body.password);
     const profesionalCreado = await Profesional.create({
