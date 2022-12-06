@@ -10,7 +10,9 @@ const tokenSign = async (user, time) => {
 
 //verificador de token
 const tokenVerify = async (req,res,next) => {
- 
+
+   
+
     const bearerheader = req.headers["authorization"]; //1. tomamos el token desde el front.
     console.log('token al back?', bearerheader);
     if (typeof bearerheader !== "undefined") {

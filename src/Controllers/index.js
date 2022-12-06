@@ -17,6 +17,7 @@ const { tokenSign } = require("../helpers/jwt");
 
 //traer todos los profesionales
 const profesionales = async (req, res, next) => {
+  
   try {
     const profesionales = await Profesional.findAll({ include: Turno });
     if (profesionales.length === 0)
@@ -284,12 +285,16 @@ const nodemailer = require("nodemailer");
 const res = require("express/lib/response");
 //creamos el transporter
 const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
-  port: 587,
-  secure: false,
+  host: "localhost",
+  // port: 587,
+  port:465,
+  service:'gmail',
+  secure: true,
   auth: {
-    user: "helmer.erdman@ethereal.email",
-    pass: "bbyeVgJk52fNBacFxC",
+    // user: "helmer.erdman@ethereal.email",
+    // pass: "bbyeVgJk52fNBacFxC",
+    user: "carlosvazqueznosetto@gmail.com",
+    pass: "ippjosowxxvglujw",
   },
   tls: {
     rejectUnauthorized: false, // sin esto no funciona.Ver esto en producción
@@ -331,17 +336,23 @@ const passwordOlvidado = async (req, res, next) => {
     const token = await tokenSign(usuario, "15m");
 
     //armamos el link para resetear
-    const link = `localhost:3001/resetPassword`; //ver en front cual es el LINK que abre la FORM
+    // const link = `localhost:3001/resetPassword`; //ver en front cual es el LINK que abre la FORM
+    const link = "https://grupoaguilasrl.com"
 
     //armamos template para enviar
     const mailDetails = {
       from: "carlosvazqueznosetto@gmail.com",
-      to: usuario.email,
+      // to: usuario.email,
+      to:"otonielreyes0@gmail.com",
       subject: "Recuperar el password",
       html: `<h2>Servicio de recuperacion de contraseña</h2>
-          <p>Para resetear el password, hace click en el siguiente Link</p>
-          <a href="${link}" target="_blank">Reset contraseña</a>
+          <h3>Para resetear el password, hace click en el siguiente Link</h3>
+          <h4>
+            <a href="${link}" target="_blank">Reset contraseña</a>
+          </h4>  
           `,
+          
+            
     };
     //usamos el transporter para enviar el mail con el magic-link
     transporter.sendMail(mailDetails, (err, info) => {
