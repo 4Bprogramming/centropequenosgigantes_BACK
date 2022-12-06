@@ -16,10 +16,10 @@ router.get("/profesionales",tokenVerify, profesionales);
 router.get("/profesionales/:idProfesional",tokenVerify,profesionalPorId);
 
 //buscar todos los usuarios
-router.get ('/usuarios',usuarios)
+router.get ('/usuarios',tokenVerify,usuarios)
 
 // buscar usuario por Email
-router.get ('/usuarios/:email',usuarioPorEmail);
+router.get ('/usuarios/:email',tokenVerify,usuarioPorEmail);
 
 //traer historias clinicas
 router.get('/historiaclinica',tokenVerify,traerHistoriaClinica);
@@ -36,8 +36,8 @@ router.get('/turnos/:id',tokenVerify,tokenVerify,traerTurnoPorID);
 
 
 //***POSTS*****/
-router.post('/usuarios',validadorDeDatos,crearUsuario);
-router.post('/profesionales',validadorDeDatos,crearProfesional);
+router.post('/usuarios',validadorDeDatos,tokenVerify,crearUsuario);
+router.post('/profesionales',validadorDeDatos,tokenVerify,crearProfesional);
 router.post('/turnos',tokenVerify,crearTurno);
 //login
 router.post('/login',login);
