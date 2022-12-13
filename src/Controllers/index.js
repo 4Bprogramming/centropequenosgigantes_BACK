@@ -230,7 +230,7 @@ const login = async (req, res, next) => {
 
     //si el password es correcto manda usuario y token
     if (passwordCorrecto) {
-      const tokenDeAcceso = await tokenSign(respuestaDB.dataValues, "2h");
+      const tokenDeAcceso = await tokenSign(respuestaDB.dataValues, "10h");
       res.status(200).send({ usuario: respuestaDB, token: tokenDeAcceso });
     } else {
       //password incorrecto
