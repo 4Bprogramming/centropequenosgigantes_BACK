@@ -166,6 +166,7 @@ const crearUsuario = async (req, res, next) => {
 
 //crear profesional
 const crearProfesional = async (req, res, next) => {
+  console.log('llegue', req.body);
   try {
     const hashedPassword = await hashPassword(req.body.password);
     const profesionalCreado = await Profesional.create({
@@ -229,7 +230,7 @@ const login = async (req, res, next) => {
 
     //si el password es correcto manda usuario y token
     if (passwordCorrecto) {
-      const tokenDeAcceso = await tokenSign(respuestaDB.dataValues, "2h");
+      const tokenDeAcceso = await tokenSign(respuestaDB.dataValues, "10h");
       res.status(200).send({ usuario: respuestaDB, token: tokenDeAcceso });
     } else {
       //password incorrecto
