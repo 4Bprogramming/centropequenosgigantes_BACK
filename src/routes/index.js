@@ -5,7 +5,8 @@ const router = Router();
 const {validadorDeDatos,validadorDeAdmin,sanitizador} = require('../helpers/validations');
 
 //validador de token para ingresar a las rutas
-const {tokenVerify} = require('../helpers/jwt')
+const {tokenVerify} = require('../helpers/jwt');
+const { horariosCreados, turnoCrear } = require("../Controllers/Turnos");
 
 ///Todas las rutas acá: 
 
@@ -36,13 +37,17 @@ router.get('/turnos/:id',tokenVerify,tokenVerify,traerTurnoPorID);
 
 
 //***POSTS*****/
-router.post('/usuarios',validadorDeDatos,tokenVerify,crearUsuario);
-router.post('/profesionales',validadorDeDatos,tokenVerify,crearProfesional);
-router.post('/turnos',tokenVerify,crearTurno);
+router.post('/usuarios',validadorDeDatos,crearUsuario);
+router.post('/profesionales',validadorDeDatos,crearProfesional);
+// router.post('/turnos',tokenVerify,crearTurno);
+router.post('/turnos',tokenVerify,turnoCrear);
+router.post('/turnos/horas',tokenVerify,horariosCreados);
+// router.post('/turnos',crearTurno);
 //login
 router.post('/login',login);
 // Crear un Admin Admin
 router.post('/crearadmin',validadorDeAdmin,tokenVerify,crearAdmin);
+// router.post('/crearadmin',validadorDeAdmin,crearAdmin);
 
 //Crear historia clinica
 router.post('/historiaclinica',tokenVerify,crearHistoriaClinica)

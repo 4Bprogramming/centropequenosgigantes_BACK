@@ -14,6 +14,7 @@ const tokenVerify = async (req,res,next) => {
    
 
     const bearerheader = req.headers["authorization"]; //1. tomamos el token desde el front.
+    console.log('token al back?', bearerheader);
     if (typeof bearerheader !== "undefined") {
       let tokenWithoutbearer = null; 
       tokenWithoutbearer = bearerheader.split(" ")[1]; //2. le sacamos la palabra bearer
