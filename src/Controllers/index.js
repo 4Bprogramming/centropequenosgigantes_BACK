@@ -285,16 +285,13 @@ const nodemailer = require("nodemailer");
 const res = require("express/lib/response");
 //creamos el transporter
 const transporter = nodemailer.createTransport({
-  host: "host107.",
-  // port: 587,
+  host: "host107.latinoamericahosting.com",
   port:465,
-  service:'gmail',
+  // service:'gmail',
   secure: true,
   auth: {
-    // user: "helmer.erdman@ethereal.email",
-    // pass: "bbyeVgJk52fNBacFxC",
-    user: "carlosvazqueznosetto@gmail.com",
-    pass: "ippjosowxxvglujw",
+    user:"no-reply@centropequenosgigantes.com",
+    pass: "4b-programming"
   },
   tls: {
     rejectUnauthorized: false, // sin esto no funciona.Ver esto en producción
@@ -341,18 +338,16 @@ const passwordOlvidado = async (req, res, next) => {
 
     //armamos template para enviar
     const mailDetails = {
-      from: "carlosvazqueznosetto@gmail.com",
+      from: "no-reply@centropequenosgigantes.com",
       // to: usuario.email,
-      to:"otonielreyes0@gmail.com",
+      to:`${rolBuscadoEnDB.email}`,
       subject: "Recuperar el password",
       html: `<h2>Servicio de recuperacion de contraseña</h2>
           <h3>Para resetear el password, hace click en el siguiente Link</h3>
           <h4>
             <a href="${link}" target="_blank">Reset contraseña</a>
           </h4>  
-          `,
-          
-            
+          `   
     };
     //usamos el transporter para enviar el mail con el magic-link
     transporter.sendMail(mailDetails, (err, info) => {
@@ -404,9 +399,9 @@ const resetPassword = async (req, res, next) => {
       password: hashedPassword,
     });
     if (!usuarioActualizado) {
-        return res.status(401).send({ message: "El usuario no ha podido ser editado, lo siento. " });
+        return res.status(401).send({ message: "¡No se ha podido cambiar su contraseña!" });
     } else {
-        res.status(200).send({ message: "Usuario, actualizado con exito" });
+        res.status(200).send({ message: "¡El cambio de su contraseña fue exitoso!" });
     }
   } catch (e) {
     next(e);
