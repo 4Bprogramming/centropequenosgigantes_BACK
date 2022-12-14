@@ -284,7 +284,7 @@ const nodemailer = require("nodemailer");
 const res = require("express/lib/response");
 //creamos el transporter
 const transporter = nodemailer.createTransport({
-  host: "localhost",
+  host: "host107.",
   // port: 587,
   port:465,
   service:'gmail',
