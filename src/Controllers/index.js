@@ -53,7 +53,7 @@ const profesionalPorId = async (req, res, next) => {
 const usuarios = async (req, res, next) => {
   try {
     const usuarios = await Usuario.findAll({
-      include: [{ model: Turno, include: [Historiaclinica] }],
+      include: { model: Historiaclinica }
     });
     if (usuarios.length === 0)
       return res.status(404).send({ message: "No se encontraron usuarios" });
@@ -68,7 +68,7 @@ const usuarioPorEmail = async (req, res, next) => {
   const { email } = req.params;
   try {
     const usuarioPorMail = await Usuario.findByPk(email, {
-      include: [{ model: Turno, include: [Historiaclinica] }],
+      include: {model: Historiaclinica} ,
     });
     if (usuarioPorMail) {
       res.status(200).send(usuarioPorMail);
@@ -119,7 +119,11 @@ const traerHistoriaClinicaPorID = async (req, res, next) => {
 
 const traerTurnos = async (req, res, next) => {
   try {
-    const todosLosTurnos = await Turno.findAll();
+    const todosLosTurnos = await Turno.findAll({
+      include:{
+        model:Profesional
+      }
+    });
     if (!todosLosTurnos)
       return res.status(404).send({ message: "No se encontró ningun turno" });
     res.status(200).send(todosLosTurnos);

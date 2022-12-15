@@ -24,9 +24,9 @@ const makeAppointment=(dates, hours)=>{
 }
 
 async function checking(dates,hours,profesionalIdProfesional){
-    console.log('profesionalID===>', profesionalIdProfesional);
+    
     const appointments=makeAppointment(dates,hours)
-   console.log('appppppppp', appointments)
+   
     const checkingApp={availableApp:[],busyApp:[]}
             for(let i=0; i< appointments.length; i++){
                
