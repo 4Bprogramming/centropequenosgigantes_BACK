@@ -162,11 +162,9 @@ const horariosCreados = async(req, res, next)=>{
 const turnoCrear=async(req, res, next)=>{
     try {
         const {hours, dates, profesionalIdProfesional}= req.body
-        console.log('linea 17 ctl app.... hrs', hours)
-        console.log('profesionalIdProfesional en TURNOS BACK==>', profesionalIdProfesional);
+      
         const appointments = await checking(dates,hours,profesionalIdProfesional)
-        //console.log('soy el ad', ad)
-        console.log('el checkig devuelve==>', appointments)
+        
        if(appointments.availableApp.length> 0){
        
             let apps = appointments.availableApp.map((app)=>{

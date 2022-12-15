@@ -53,7 +53,7 @@ const profesionalPorId = async (req, res, next) => {
 const usuarios = async (req, res, next) => {
   try {
     const usuarios = await Usuario.findAll({
-      include: [{ model: Turno, include: [Historiaclinica] }],
+      include: { model: Historiaclinica }
     });
     if (usuarios.length === 0)
       return res.status(404).send({ message: "No se encontraron usuarios" });
@@ -68,7 +68,7 @@ const usuarioPorEmail = async (req, res, next) => {
   const { email } = req.params;
   try {
     const usuarioPorMail = await Usuario.findByPk(email, {
-      include: [{ model: Turno, include: [Historiaclinica] }],
+      include: {model: Historiaclinica} ,
     });
     if (usuarioPorMail) {
       res.status(200).send(usuarioPorMail);
@@ -119,7 +119,11 @@ const traerHistoriaClinicaPorID = async (req, res, next) => {
 
 const traerTurnos = async (req, res, next) => {
   try {
-    const todosLosTurnos = await Turno.findAll();
+    const todosLosTurnos = await Turno.findAll({
+      include:{
+        model:Profesional
+      }
+    });
     if (!todosLosTurnos)
       return res.status(404).send({ message: "No se encontró ningun turno" });
     res.status(200).send(todosLosTurnos);
@@ -285,16 +289,13 @@ const nodemailer = require("nodemailer");
 const res = require("express/lib/response");
 //creamos el transporter
 const transporter = nodemailer.createTransport({
-  host: "localhost",
-  // port: 587,
+  host: "host107.latinoamericahosting.com",
   port:465,
-  service:'gmail',
+  // service:'gmail',
   secure: true,
   auth: {
-    // user: "helmer.erdman@ethereal.email",
-    // pass: "bbyeVgJk52fNBacFxC",
-    user: "carlosvazqueznosetto@gmail.com",
-    pass: "ippjosowxxvglujw",
+    user:"no-reply@centropequenosgigantes.com",
+    pass: "4b-programming"
   },
   tls: {
     rejectUnauthorized: false, // sin esto no funciona.Ver esto en producción
@@ -341,18 +342,16 @@ const passwordOlvidado = async (req, res, next) => {
 
     //armamos template para enviar
     const mailDetails = {
-      from: "carlosvazqueznosetto@gmail.com",
+      from: "no-reply@centropequenosgigantes.com",
       // to: usuario.email,
-      to:"otonielreyes0@gmail.com",
+      to:`${rolBuscadoEnDB.email}`,
       subject: "Recuperar el password",
       html: `<h2>Servicio de recuperacion de contraseña</h2>
           <h3>Para resetear el password, hace click en el siguiente Link</h3>
           <h4>
             <a href="${link}" target="_blank">Reset contraseña</a>
           </h4>  
-          `,
-          
-            
+          `   
     };
     //usamos el transporter para enviar el mail con el magic-link
     transporter.sendMail(mailDetails, (err, info) => {
@@ -404,9 +403,9 @@ const resetPassword = async (req, res, next) => {
       password: hashedPassword,
     });
     if (!usuarioActualizado) {
-        return res.status(401).send({ message: "El usuario no ha podido ser editado, lo siento. " });
+        return res.status(401).send({ message: "¡No se ha podido cambiar su contraseña!" });
     } else {
-        res.status(200).send({ message: "Usuario, actualizado con exito" });
+        res.status(200).send({ message: "¡El cambio de su contraseña fue exitoso!" });
     }
   } catch (e) {
     next(e);

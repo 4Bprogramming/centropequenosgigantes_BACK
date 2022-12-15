@@ -52,8 +52,11 @@ Usuario.hasMany(Turno);
 Turno.belongsTo(Usuario);
 
 
-Turno.hasOne(Historiaclinica);
-Historiaclinica.belongsTo(Turno);
+// Turno.hasOne(Historiaclinica);
+// Historiaclinica.belongsTo(Turno);
+
+Usuario.hasOne(Historiaclinica);
+Historiaclinica.belongsTo(Usuario);
 
 
 // Professional.hasMany(Appointment )

@@ -11,28 +11,28 @@ const { horariosCreados, turnoCrear } = require("../Controllers/Turnos");
 ///Todas las rutas acá: 
 
 //traer todos los  profesionales
-router.get("/profesionales",tokenVerify, profesionales);
+router.get("/profesionales", profesionales);//tokenVerify,
 
 // traer profesional por ID
-router.get("/profesionales/:idProfesional",tokenVerify,profesionalPorId);
+router.get("/profesionales/:idProfesional",profesionalPorId);//tokenVerify,
 
 //buscar todos los usuarios
-router.get ('/usuarios',tokenVerify,usuarios)
+router.get ('/usuarios',usuarios)//tokenVerify,
 
 // buscar usuario por Email
-router.get ('/usuarios/:email',tokenVerify,usuarioPorEmail);
+router.get ('/usuarios/:email',usuarioPorEmail);//tokenVerify,
 
 //traer historias clinicas
-router.get('/historiaclinica',tokenVerify,traerHistoriaClinica);
+router.get('/historiaclinica',traerHistoriaClinica);//tokenVerify,
 
 //traer historia clinica por ID
-router.get('/historiaclinica/:id',tokenVerify,traerHistoriaClinicaPorID)
+router.get('/historiaclinica/:id',traerHistoriaClinicaPorID) //tokenVerify,
 
 // traer todos los turnos
-router.get('/turnos',tokenVerify,traerTurnos);
+router.get('/turnos',traerTurnos);//tokenVerify,
 
 // traer turno por ID
-router.get('/turnos/:id',tokenVerify,tokenVerify,traerTurnoPorID);
+router.get('/turnos/:id',traerTurnoPorID);//tokenVerify,
 
 
 
@@ -40,7 +40,7 @@ router.get('/turnos/:id',tokenVerify,tokenVerify,traerTurnoPorID);
 router.post('/usuarios',validadorDeDatos,crearUsuario);
 router.post('/profesionales',validadorDeDatos,crearProfesional);
 // router.post('/turnos',tokenVerify,crearTurno);
-router.post('/turnos',tokenVerify,turnoCrear);
+router.post('/turnos',turnoCrear);//tokenVerify,
 router.post('/turnos/horas',tokenVerify,horariosCreados);
 // router.post('/turnos',crearTurno);
 //login
@@ -50,11 +50,11 @@ router.post('/crearadmin',validadorDeAdmin,tokenVerify,crearAdmin);
 // router.post('/crearadmin',validadorDeAdmin,crearAdmin);
 
 //Crear historia clinica
-router.post('/historiaclinica',tokenVerify,crearHistoriaClinica)
+router.post('/historiaclinica',crearHistoriaClinica)//tokenVerify,
 
 
 //***PUT --> (UPDATE)***/
-router.put('/turnos',tokenVerify,modificarTurno);
+router.put('/turnos',modificarTurno);//tokenVerify,
 router.put('/editarprofesional/:idProfesional',sanitizador,tokenVerify,editarprofesional)
 router.put('/editarusuario/:email',sanitizador,tokenVerify,editarusuario)
 
