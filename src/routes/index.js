@@ -40,7 +40,7 @@ router.get('/turnos/:id',traerTurnoPorID);//tokenVerify,
 router.post('/usuarios',validadorDeDatos,crearUsuario);
 router.post('/profesionales',validadorDeDatos,crearProfesional);
 // router.post('/turnos',tokenVerify,crearTurno);
-router.post('/turnos',turnoCrear);//tokenVerify,
+router.post('/turnos',tokenVerify,turnoCrear);//
 router.post('/turnos/horas',tokenVerify,horariosCreados);
 // router.post('/turnos',crearTurno);
 //login
