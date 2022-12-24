@@ -46,7 +46,7 @@ router.post('/turnos/horas',tokenVerify,horariosCreados);
 //login
 router.post('/login',login);
 // Crear un Admin Admin
-router.post('/crearadmin',validadorDeAdmin,crearAdmin);//tokenVerify,
+router.post('/crearadmin',validadorDeAdmin,tokenVerify,crearAdmin);//
 // router.post('/crearadmin',validadorDeAdmin,crearAdmin);
 
 //Crear historia clinica
